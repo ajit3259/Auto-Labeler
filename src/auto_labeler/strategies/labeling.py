@@ -64,6 +64,8 @@ class SimpleLabelingStrategy:
         label_results = []
         prompt_template = self._load_prompt(prompts_dir, "assignment")
         
+        # TODO: Implement batch processing to reduce the number of LLM calls (send N records per prompt).
+        
         multi_label_instruction = 'Select strictly one label.' if not multi_label else 'Select one or more labels.'
         output_format_instruction = 'a string' if not multi_label else 'a list of strings'
         
@@ -101,15 +103,23 @@ class ConsensusLabelingStrategy:
     A high-accuracy strategy that uses multiple models (judges) to vote on labels.
     Disagreements are resolved by a powerful 'Adjudicator' model.
     """
-    def __init__(self, models: List[str], adjudicator_model: str, api_key: Optional[str] = None):
+    def __init__(self, models: List[str], adjudicator_model: str, api_keys: Optional[Dict[str, str]] = None):
         """
         Args:
             models: List of model names to use as judges (e.g. ['gpt-3.5-turbo', 'gemini-1.5-flash']).
             adjudicator_model: Strong model (e.g. 'gpt-4o') to decide in case of disagreement.
-            api_key: Optional API key override.
+            api_keys: Optional dictionary mapping model names to API keys. 
+                      If None, relies on environment variables (recommended).
+                      Example: {'gpt-4o': 'sk-...', 'gemini/gemini-1.5-flash': 'AI...'}
         """
-        self.adapters = [LLMAdapter(model_name=m, api_key=api_key) for m in models]
-        self.adjudicator = LLMAdapter(model_name=adjudicator_model, api_key=api_key)
+        self.adapters = []
+        for m in models:
+            # Check if specific key provided, else None (Env Var)
+            key = api_keys.get(m) if api_keys else None
+            self.adapters.append(LLMAdapter(model_name=m, api_key=key))
+            
+        adj_key = api_keys.get(adjudicator_model) if api_keys else None
+        self.adjudicator = LLMAdapter(model_name=adjudicator_model, api_key=adj_key)
 
     def _load_prompt(self, prompts_dir: pathlib.Path, prompt_name: str) -> str:
         with open(prompts_dir / f"{prompt_name}.yaml", "r") as f:
@@ -132,6 +142,8 @@ class ConsensusLabelingStrategy:
         
         assignment_template = self._load_prompt(prompts_dir, "assignment")
         adjudicator_template = self._load_prompt(prompts_dir, "adjudicator")
+        
+        # TODO: Implement batch processing for consensus voting as well.
         
         multi_label_instruction = 'Select strictly one label.' if not multi_label else 'Select one or more labels.'
         output_format_instruction = 'a string' if not multi_label else 'a list of strings'

@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import MagicMock, patch
 import pandas as pd
 from auto_labeler.strategies.labeling import ConsensusLabelingStrategy, SimpleLabelingStrategy
-from auto_labeler.strategies.discovery import ParallelDiscoveryStrategy
+from auto_labeler.strategies.discovery import ParallelDiscoveryStrategy, SimpleDiscoveryStrategy
 from auto_labeler.llm import LLMAdapter
 import pathlib
 
@@ -102,6 +102,21 @@ class TestStrategies(unittest.TestCase):
             
             self.assertEqual(result.iloc[0]["predicted_label"], "A")
             self.assertEqual(result.iloc[0]["confidence_level"], "Medium (Adjudicated)")
+
+    def test_simple_strategy_shuffle(self):
+        # Test that shuffle works (mock df sample)
+        llm_mock = MagicMock()
+        strategy = SimpleDiscoveryStrategy(llm_mock, shuffle=True, sample_size=1)
+        
+        # Mock _load_prompt to avoid file I/O
+        strategy._load_prompt = MagicMock(return_value="Prompt")
+        
+        df = pd.DataFrame({"text": ["A", "B", "C"]})
+        
+        # Mock df.sample to verify it's called
+        with patch.object(pd.DataFrame, 'sample', return_value=pd.DataFrame({"text": ["A"]})) as mock_sample:
+            strategy.suggest_labels(df, "ctx", pathlib.Path("."))
+            mock_sample.assert_called()
 
 if __name__ == '__main__':
     unittest.main()

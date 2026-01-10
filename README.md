@@ -32,4 +32,3 @@ See the [LiteLLM Providers Docs](https://docs.litellm.ai/docs/providers) for the
 - **Flexible Backend**: Works with OpenAI, Gemini, Anthropic, and more via LiteLLM.
 - **Pandas Integration**: Native dataframe support.
 
-## Installation

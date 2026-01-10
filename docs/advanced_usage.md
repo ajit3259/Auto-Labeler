@@ -18,7 +18,8 @@ judges = [
 strategy = ConsensusLabelingStrategy(
     models=judges,
     adjudicator_model="gpt-4o", 
-    api_key=os.environ["GEMINI_API_KEY"]
+    # API Keys are handled via Environment Variables (OPENAI_API_KEY, GEMINI_API_KEY, etc.)
+    # Or pass explicit keys: api_keys={"gpt-4o": "...", ...}
 )
 
 df = labeler.label_dataset(df, labels=labels, context=context, strategy=strategy)
