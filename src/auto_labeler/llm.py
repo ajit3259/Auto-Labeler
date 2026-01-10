@@ -48,7 +48,8 @@ class LLMAdapter:
             model=self.model_name,
             api_key=self.api_key,
             messages=messages,
-            response_format={"type": "json_object"}
+            response_format={"type": "json_object"},
+            num_retries=3
         )
         
         content = response.choices[0].message.content

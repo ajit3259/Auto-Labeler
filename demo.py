@@ -1,5 +1,6 @@
 import os
 import pandas as pd
+import time
 from auto_labeler.core import AutoLabeler
 from auto_labeler.utils import load_data
 
@@ -13,7 +14,7 @@ def main():
 
     print("Initializing AutoLabeler...")
     # Using Gemini via LiteLLM
-    labeler = AutoLabeler(model_name="gemini/gemini-2.5-flash", api_key=api_key)
+    labeler = AutoLabeler(model_name="gemini/gemini-2.5-flash-lite", api_key=api_key)
 
     # 2. Load Data (Creating dummy data for demo purposes)
     print("Creating sample data...")
@@ -34,12 +35,26 @@ def main():
     print(f"Loaded {len(df)} records.")
 
     # 3. Discovery (Optional)
-    print("\n--- Phase 1: Label Discovery ---")
+    print("\n--- Phase 1: Label Discovery (Simple) ---")
     suggested_labels = labeler.suggest_labels(df, context=context, n_labels=3)
     print(f"Suggested Labels: {suggested_labels}")
     
+    # 4. Smart Discovery Demo (New)
+    print("\n--- Phase 1.5: Smart Discovery (Parallel) ---")
+    print(f"Sampling 3 chunks of 5 records each...")
+    from auto_labeler.strategies import ParallelDiscoveryStrategy
+    parallel_strategy = ParallelDiscoveryStrategy(labeler.llm, num_samples=3, sample_size=5)
+    
+    smart_labels = labeler.suggest_labels(df, context, n_labels=3, strategy=parallel_strategy)
+    print(f"Smart Suggested Labels (Merged): {smart_labels}")
+    
+    # Use smart labels effectively if they exist
+    if smart_labels:
+        suggested_labels = list(set(suggested_labels + smart_labels))
+    
     # 4. Assignment
     print("\n--- Phase 2: Label Assignment ---")
+    time.sleep(10) # Avoid Rate Limits
     labeled_df = labeler.label_dataset(df, labels=suggested_labels, context=context)
     
     print("\nResults:")
@@ -47,6 +62,7 @@ def main():
 
     # 5. Consensus Mode Demo
     print("\n--- Phase 3: Consensus & Confidence ---")
+    time.sleep(10) # Avoid Rate Limits
     print("Running with 3 judges (gemini-2.5-flash-lite, gemini-3-flash-preview)...")
     
     from auto_labeler.strategies import ConsensusLabelingStrategy

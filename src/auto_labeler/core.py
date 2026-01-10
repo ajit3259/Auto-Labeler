@@ -22,35 +22,28 @@ class AutoLabeler:
         df: pd.DataFrame, 
         context: str, 
         n_labels: int = 5,
-        column: Optional[str] = None
+        column: Optional[str] = None,
+        strategy: Optional[Any] = None
     ) -> List[str]:
         """
         Suggests a list of labels based on a sample of the data and the provided context.
         If 'column' is not provided, it tries to use the first string column or all columns.
         """
-        sample = df.head(10).to_dict(orient="records")
         if column:
-             # If specific column focused, just show that, but context from whole row is often good.
-             # For now let's dump the whole record to give maximum context.
+             # Logic for specific column focus can be handled in strategy in future
              pass
 
-        prompt_template = self._load_prompt("discovery")
-        prompt = prompt_template.format(
+        # Default to Simple Strategy if none provided
+        if not strategy:
+            from .strategies import SimpleDiscoveryStrategy
+            strategy = SimpleDiscoveryStrategy(self.llm)
+
+        return strategy.suggest_labels(
+            df=df,
             context=context,
-            sample=sample,
+            prompts_dir=self.prompts_dir,
             n_labels=n_labels
         )
-        
-        schema = {
-            "type": "object",
-            "properties": {
-                "labels": {"type": "array", "items": {"type": "string"}}
-            },
-            "required": ["labels"]
-        }
-        
-        response = self.llm.generate_structured(prompt, response_schema=schema)
-        return response.get("labels", [])
 
     def label_dataset(
         self, 
