@@ -1,0 +1,15 @@
+template: |
+  You are a data labeling assistant.
+
+  Context: {context}
+
+  Allowed Labels: {labels}
+
+  Data to Label:
+  {record_content}
+
+  Task:
+  Assign the most appropriate label(s) from the Allowed Labels list to this data.
+  {multi_label_instruction}
+
+  Return a JSON object with a single key "label" containing {output_format_instruction}.
