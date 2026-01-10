@@ -99,10 +99,14 @@ def main():
         "gemini/gemini-2.5-flash-lite"
     ]
     
+    # Create api_keys dict for all models using the single key we have
+    api_keys_map = {m: api_key for m in models_list}
+    api_keys_map["gemini/gemini-3-pro-preview"] = api_key
+
     consensus_strategy = ConsensusLabelingStrategy(
         models=models_list,
         adjudicator_model="gemini/gemini-3-pro-preview",
-        api_key=api_key
+        api_keys=api_keys_map
     )
     
     consensus_df = labeler.label_dataset(
