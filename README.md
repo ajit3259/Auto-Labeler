@@ -12,6 +12,12 @@ An AI-powered data labeling library for Python.
 pip install auto-labeler
 ```
 
+## Testing
+To run the automated tests:
+```bash
+python -m unittest discover tests
+```
+
 ## Supported Models
 We use [LiteLLM](https://docs.litellm.ai/docs/providers) under the hood, so you can use almost any LLM provider.
 Pass the model name in the `model_name` argument (e.g., `gpt-4o`, `gemini/gemini-1.5-flash`, `claude-3-opus`).

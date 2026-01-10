@@ -6,6 +6,10 @@ import yaml
 from jinja2 import Template
 
 class LabelingStrategy(Protocol):
+    """
+    Protocol definition for labeling strategies.
+    Strategies define how labels are assigned to a dataframe given a context and set of labels.
+    """
     def label(
         self, 
         df: pd.DataFrame, 
@@ -16,9 +20,28 @@ class LabelingStrategy(Protocol):
         multi_label: bool = False,
         examples: Optional[List[Dict[str, str]]] = None
     ) -> pd.DataFrame:
+        """
+        Apply labels to the dataframe.
+        
+        Args:
+            df: Input dataframe containing the text to label.
+            labels: List of allowed labels.
+            context: Description of the dataset context.
+            prompts_dir: Directory containing YAML prompt templates.
+            target_column: Name of the column containing text to label.
+            multi_label: Whether multiple labels can be assigned to a single record.
+            examples: Optional list of few-shot examples (dictionaries with 'text' and 'label').
+            
+        Returns:
+            DataFrame with 'predicted_label' column added.
+        """
         ...
 
 class SimpleLabelingStrategy:
+    """
+    A cost-effective strategy that uses a single LLM call per record.
+    Best for simple tasks or initial passes.
+    """
     def __init__(self, llm: LLMAdapter):
         self.llm = llm
 
@@ -74,11 +97,16 @@ class SimpleLabelingStrategy:
         return result_df
 
 class ConsensusLabelingStrategy:
+    """
+    A high-accuracy strategy that uses multiple models (judges) to vote on labels.
+    Disagreements are resolved by a powerful 'Adjudicator' model.
+    """
     def __init__(self, models: List[str], adjudicator_model: str, api_key: Optional[str] = None):
         """
         Args:
-            models: List of model names to use as judges (e.g. ['gpt-3.5-turbo', 'gemini-1.5-flash', ...])
-            adjudicator_model: Strong model to decide in case of disagreement.
+            models: List of model names to use as judges (e.g. ['gpt-3.5-turbo', 'gemini-1.5-flash']).
+            adjudicator_model: Strong model (e.g. 'gpt-4o') to decide in case of disagreement.
+            api_key: Optional API key override.
         """
         self.adapters = [LLMAdapter(model_name=m, api_key=api_key) for m in models]
         self.adjudicator = LLMAdapter(model_name=adjudicator_model, api_key=api_key)

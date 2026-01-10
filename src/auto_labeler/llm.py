@@ -4,7 +4,16 @@ import litellm
 from pydantic import BaseModel
 
 class LLMAdapter:
+    """
+    A unified wrapper around LiteLLM to handle different providers (OpenAI, Gemini, etc.)
+    and standard interactions like text generation and structured outputs.
+    """
     def __init__(self, model_name: str, api_key: Optional[str] = None):
+        """
+        Args:
+            model_name: The LiteLLM model identifier (e.g. 'gpt-3.5-turbo').
+            api_key: Optional API key override.
+        """
         self.model_name = model_name
         self.api_key = api_key
 
