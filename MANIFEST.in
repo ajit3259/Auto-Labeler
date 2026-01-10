@@ -1,1 +1,2 @@
 recursive-include src/auto_labeler/prompts *.yaml
+

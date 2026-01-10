@@ -45,6 +45,34 @@ def main():
     print("\nResults:")
     print(labeled_df[["text", "predicted_label"]])
 
+    # 5. Consensus Mode Demo
+    print("\n--- Phase 3: Consensus & Confidence ---")
+    print("Running with 3 judges (gemini-2.5-flash-lite, gemini-3-flash-preview)...")
+    
+    from auto_labeler.strategies import ConsensusLabelingStrategy
+    
+    models_list = [
+        "gemini/gemini-2.5-flash-lite", 
+        "gemini/gemini-3-flash-preview", 
+        "gemini/gemini-2.5-flash-lite"
+    ]
+    
+    consensus_strategy = ConsensusLabelingStrategy(
+        models=models_list,
+        adjudicator_model="gemini/gemini-3-pro-preview",
+        api_key=api_key
+    )
+    
+    consensus_df = labeler.label_dataset(
+        df, 
+        labels=suggested_labels, 
+        context=context,
+        strategy=consensus_strategy
+    )
+    
+    print("\nConsensus Results:")
+    print(consensus_df[["text", "predicted_label", "confidence_level"]])
+
     # Cleanup
     if os.path.exists(dummy_csv):
         os.remove(dummy_csv)

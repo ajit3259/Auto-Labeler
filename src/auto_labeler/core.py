@@ -1,5 +1,5 @@
 import pandas as pd
-from typing import List, Optional
+from typing import List, Optional, Any
 import pathlib
 import yaml
 from .llm import LLMAdapter
@@ -58,60 +58,22 @@ class AutoLabeler:
         labels: List[str], 
         context: str, 
         target_column: str = "text",
-        multi_label: bool = False
+        multi_label: bool = False,
+        strategy: Optional[Any] = None # In future type hint this better
     ) -> pd.DataFrame:
         """
         Labels the dataset using the provided labels.
-        
-        Args:
-            df: Input DataFrame
-            labels: List of valid labels to choose from
-            context: Context about the dataset
-            target_column: The column to analyze for labeling (currently required for simplicity)
-            multi_label: If True, allows multiple labels per record.
-        
-        Returns:
-            DataFrame with a new 'predicted_label' column.
         """
-        # Pragmatic: Loop through for MVP. Batching is a V2 feature.
-        # We'll use a copy to avoid SettingWithCopy warnings
-        result_df = df.copy()
-        
-        label_results = []
-        prompt_template = self._load_prompt("assignment")
-        
-        # Prepare instruction strings once
-        multi_label_instruction = 'Select strictly one label.' if not multi_label else 'Select one or more labels.'
-        output_format_instruction = 'a string' if not multi_label else 'a list of strings'
-
-        # We can optimize by batching later, but for now row-by-row is safest for error handling
-        for index, row in result_df.iterrows():
-            record_content = row[target_column] if target_column in row else str(row.to_dict())
+        # Default to Simple Strategy if none provided
+        if not strategy:
+            from .strategies import SimpleLabelingStrategy
+            strategy = SimpleLabelingStrategy(self.llm)
             
-            prompt = prompt_template.format(
-                context=context,
-                labels=labels,
-                record_content=record_content,
-                multi_label_instruction=multi_label_instruction,
-                output_format_instruction=output_format_instruction
-            )
-            
-            try:
-                # We don't enforce strict schema validation here for every row to save latency/tokens 
-                # effectively, but we do ask for structured output.
-                # A simple generate_structured call is robust enough.
-                response = self.llm.generate_structured(prompt, response_schema={})
-                assigned_label = response.get("label")
-                
-                # Basic validation
-                if not multi_label and isinstance(assigned_label, list):
-                    assigned_label = assigned_label[0] if assigned_label else None
-                
-                label_results.append(assigned_label)
-            except Exception as e:
-                # Fail gracefully
-                # print(f"Error labeling row {index}: {e}")
-                label_results.append(None)
-        
-        result_df['predicted_label'] = label_results
-        return result_df
+        return strategy.label(
+            df=df, 
+            labels=labels, 
+            context=context, 
+            prompts_dir=self.prompts_dir,
+            target_column=target_column, 
+            multi_label=multi_label
+        )

@@ -1,0 +1,14 @@
+template: |
+  You are an expert data adjudication judge.
+  
+  Context: {context}
+  Allowed Labels: {labels}
+  Data to Label: {record_content}
+  
+  Three models have provided the following labels:
+  {votes}
+  
+  There is a disagreement.
+  Your task is to review the data and the votes, and provide the single correct label from the Allowed Labels list.
+  
+  Return a JSON object with a single key "label" containing the string of the correct label.
