@@ -59,6 +59,32 @@ def main():
     
     print("\nResults:")
     print(labeled_df[["text", "predicted_label"]])
+    
+    # 5. Domain Knowledge (Few-Shot) Demo
+    print("\n--- Phase 2.5: Domain Knowledge (Few-Shot) ---")
+    # Let's say we have an ambiguous case or we want to enforce a rule.
+    # Example: "Reset password" might be "Support" but we want "Account Security".
+    # And we want to see if an example fixes it.
+    
+    # Creating a tricky case
+    tricky_df = pd.DataFrame({"text": ["I forgot my password again."]})
+    print(f"Labeling tricky input: {tricky_df['text'].iloc[0]}")
+    
+    # Without examples (might go to General Support)
+    res_no_ex = labeler.label_dataset(tricky_df, labels=suggested_labels + ["Account Security"], context=context)
+    print(f"Without Example: {res_no_ex['predicted_label'].iloc[0]}")
+    
+    # With Example
+    examples = [
+        {"text": "How do I reset my password?", "label": "Account Security"}
+    ]
+    res_with_ex = labeler.label_dataset(
+        tricky_df, 
+        labels=suggested_labels + ["Account Security"], 
+        context=context,
+        examples=examples
+    )
+    print(f"With Example: {res_with_ex['predicted_label'].iloc[0]}")
 
     # 5. Consensus Mode Demo
     print("\n--- Phase 3: Consensus & Confidence ---")

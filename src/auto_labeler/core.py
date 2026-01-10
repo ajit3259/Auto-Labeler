@@ -52,7 +52,8 @@ class AutoLabeler:
         context: str, 
         target_column: str = "text",
         multi_label: bool = False,
-        strategy: Optional[Any] = None # In future type hint this better
+        strategy: Optional[Any] = None,# In future type hint this better
+        examples: Optional[List[dict]] = None
     ) -> pd.DataFrame:
         """
         Labels the dataset using the provided labels.
@@ -68,5 +69,6 @@ class AutoLabeler:
             context=context, 
             prompts_dir=self.prompts_dir,
             target_column=target_column, 
-            multi_label=multi_label
+            multi_label=multi_label,
+            examples=examples
         )

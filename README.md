@@ -18,9 +18,12 @@ Pass the model name in the `model_name` argument (e.g., `gpt-4o`, `gemini/gemini
 
 See the [LiteLLM Providers Docs](https://docs.litellm.ai/docs/providers) for the exact string format for your provider.
 
-## Features & Documentation- **[Labeling Strategies](docs/strategies.md)**: Support for Consensus (Voting) and Smart Discovery.
-- **Auto-Discovery**: Automatically generates a taxonomy from your data.
-- **Flexible Backend**: Bring your own Key (OpenAI, Gemini, Anthropic, etc).
-- **Pandas Integration**: Works directly with your DataFrames.
+## Features & Documentation
+- **[Advanced Usage Guide](docs/advanced_usage.md)**: Learn about Consensus, Smart Discovery, and Few-Shot Learning.
+- **Labeling Strategies**: Choose between Speed (Simple) or Accuracy (Consensus).
+- **Smart Discovery**: Automatically find edge-case labels using parallel sampling.
+- **Domain Knowledge**: Teach the AI with "Few-Shot" examples for higher accuracy.
+- **Flexible Backend**: Works with OpenAI, Gemini, Anthropic, and more via LiteLLM.
+- **Pandas Integration**: Native dataframe support.
 
 ## Installation

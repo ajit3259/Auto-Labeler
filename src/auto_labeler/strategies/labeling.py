@@ -1,8 +1,9 @@
-from typing import List, Protocol, Optional, Union
+from typing import List, Protocol, Optional, Union, Dict
 import pandas as pd
 from ..llm import LLMAdapter
 import pathlib
 import yaml
+from jinja2 import Template
 
 class LabelingStrategy(Protocol):
     def label(
@@ -12,7 +13,8 @@ class LabelingStrategy(Protocol):
         context: str, 
         prompts_dir: pathlib.Path,
         target_column: str = "text",
-        multi_label: bool = False
+        multi_label: bool = False,
+        examples: Optional[List[Dict[str, str]]] = None
     ) -> pd.DataFrame:
         ...
 
@@ -32,7 +34,8 @@ class SimpleLabelingStrategy:
         context: str, 
         prompts_dir: pathlib.Path,
         target_column: str = "text",
-        multi_label: bool = False
+        multi_label: bool = False,
+        examples: Optional[List[Dict[str, str]]] = None
     ) -> pd.DataFrame:
         result_df = df.copy()
         label_results = []
@@ -40,16 +43,20 @@ class SimpleLabelingStrategy:
         
         multi_label_instruction = 'Select strictly one label.' if not multi_label else 'Select one or more labels.'
         output_format_instruction = 'a string' if not multi_label else 'a list of strings'
-
+        
+        template = Template(prompt_template)
+        
         for index, row in result_df.iterrows():
             record_content = row[target_column] if target_column in row else str(row.to_dict())
             
-            prompt = prompt_template.format(
+            # Render with Jinja2
+            prompt = template.render(
                 context=context,
                 labels=labels,
                 record_content=record_content,
                 multi_label_instruction=multi_label_instruction,
-                output_format_instruction=output_format_instruction
+                output_format_instruction=output_format_instruction,
+                examples=examples
             )
             
             try:
@@ -73,7 +80,6 @@ class ConsensusLabelingStrategy:
             models: List of model names to use as judges (e.g. ['gpt-3.5-turbo', 'gemini-1.5-flash', ...])
             adjudicator_model: Strong model to decide in case of disagreement.
         """
-        # Create an adapter for each model
         self.adapters = [LLMAdapter(model_name=m, api_key=api_key) for m in models]
         self.adjudicator = LLMAdapter(model_name=adjudicator_model, api_key=api_key)
 
@@ -89,7 +95,8 @@ class ConsensusLabelingStrategy:
         context: str, 
         prompts_dir: pathlib.Path,
         target_column: str = "text",
-        multi_label: bool = False
+        multi_label: bool = False,
+        examples: Optional[List[Dict[str, str]]] = None
     ) -> pd.DataFrame:
         result_df = df.copy()
         label_results = []
@@ -100,17 +107,21 @@ class ConsensusLabelingStrategy:
         
         multi_label_instruction = 'Select strictly one label.' if not multi_label else 'Select one or more labels.'
         output_format_instruction = 'a string' if not multi_label else 'a list of strings'
+        
+        from jinja2 import Template
+        template = Template(assignment_template)
 
         for index, row in result_df.iterrows():
             record_content = row[target_column] if target_column in row else str(row.to_dict())
             
             # 1. BroadCast Query
-            prompt = assignment_template.format(
+            prompt = template.render(
                 context=context,
                 labels=labels,
                 record_content=record_content,
                 multi_label_instruction=multi_label_instruction,
-                output_format_instruction=output_format_instruction
+                output_format_instruction=output_format_instruction,
+                examples=examples
             )
             
             votes = []
@@ -118,14 +129,11 @@ class ConsensusLabelingStrategy:
                 try:
                     response = adapter.generate_structured(prompt, response_schema={})
                     val = response.get("label")
-                    # Normalize single items
                     if not multi_label and isinstance(val, list):
                         val = val[0] if val else None
                     votes.append(val)
                 except Exception as e:
                     print(f"Error in consensus vote: {e}")
-                    # import traceback
-                    # traceback.print_exc()
                     votes.append(None)
             
             # 2. Check Consensus
@@ -136,7 +144,6 @@ class ConsensusLabelingStrategy:
                 confidence_results.append("Failed")
                 continue
 
-            # Check if all elements are equal
             is_unanimous = all(v == valid_votes[0] for v in valid_votes)
             
             if is_unanimous:
@@ -145,6 +152,8 @@ class ConsensusLabelingStrategy:
             else:
                 # 3. Adjudicate
                 vote_str = "\n".join([f"Model {i+1}: {v}" for i, v in enumerate(votes)])
+                # Adjudicator prompt doesn't need examples usually, but could benefit. 
+                # For now keep simple format/replace for adjudicator as we didn't update that yaml.
                 adj_prompt = adjudicator_template.format(
                     context=context,
                     labels=labels,
@@ -157,7 +166,6 @@ class ConsensusLabelingStrategy:
                     label_results.append(final_label)
                     confidence_results.append("Medium (Adjudicated)")
                 except Exception:
-                    # Fallback to first valid vote
                     label_results.append(valid_votes[0])
                     confidence_results.append("Low (Fallback)")
 
