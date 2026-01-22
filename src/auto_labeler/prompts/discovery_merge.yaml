@@ -1,0 +1,14 @@
+template: |
+  You are a data expert.
+  
+  Context: {context}
+  
+  Task: You are given multiple lists of labels discovered from different batches of data.
+  Your goal is to merge them into a SINGLE, coherent, unique list of labels.
+  Combine semantically identical labels (e.g. "Login Error" and "Login Failure" -> "Login Issue").
+  Keep distinct labels separate.
+  
+  Input Label Lists:
+  {label_lists}
+  
+  Return a JSON object: {{"labels": ["Label 1", "Label 2", ...]}}

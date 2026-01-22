@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import MagicMock, patch
 import pandas as pd
 from auto_labeler.strategies.labeling import ConsensusLabelingStrategy, SimpleLabelingStrategy
-from auto_labeler.strategies.discovery import ParallelDiscoveryStrategy, SimpleDiscoveryStrategy
+from auto_labeler.strategies.discovery import ParallelDiscoveryStrategy, SimpleDiscoveryStrategy, IterativeDiscoveryStrategy
 from auto_labeler.llm import LLMAdapter
 import pathlib
 
@@ -117,6 +117,95 @@ class TestStrategies(unittest.TestCase):
         with patch.object(pd.DataFrame, 'sample', return_value=pd.DataFrame({"text": ["A"]})) as mock_sample:
             strategy.suggest_labels(df, "ctx", pathlib.Path("."))
             mock_sample.assert_called()
+
+    def test_iterative_strategy_refinement(self):
+        # Test 'refine' mode
+        llm_mock = MagicMock()
+        strategy = IterativeDiscoveryStrategy(
+            llm_mock, 
+            mode="refine",
+            seed_sample_size=2, 
+            batch_size=5, 
+            other_threshold=1
+        )
+        
+        # Mock _load_prompt to avoid file I/O for classification prompt
+        strategy._load_prompt = MagicMock(return_value="Prompt")
+
+        with patch('auto_labeler.strategies.discovery.SimpleDiscoveryStrategy') as MockSimple:
+            mock_simple_instance = MockSimple.return_value
+            mock_simple_instance.suggest_labels.side_effect = [
+                ["Label A"],  # Seed
+                ["Label B"]   # Refine
+            ]
+            
+            llm_mock.generate_structured.return_value = {"other_items": ["Unseen Item 1"]}
+            
+            df = pd.DataFrame({"text": ["A"] * 10})
+            labels = strategy.suggest_labels(df, "ctx", pathlib.Path("."), n_labels=10)
+            
+            self.assertIn("Label A", labels)
+            self.assertIn("Label B", labels)
+
+    def test_iterative_strategy_aggregate(self):
+        # Test 'aggregate' mode (Independent batches -> Merge)
+        llm_mock = MagicMock()
+        strategy = IterativeDiscoveryStrategy(
+            llm_mock, 
+            mode="aggregate",
+            batch_size=2
+        )
+        
+        strategy._load_prompt = MagicMock(return_value="Prompt")
+
+        with patch('auto_labeler.strategies.discovery.SimpleDiscoveryStrategy') as MockSimple:
+            mock_simple_instance = MockSimple.return_value
+            # Batch 1 -> [L1], Batch 2 -> [L2]
+            mock_simple_instance.suggest_labels.side_effect = [["L1"], ["L2"]]
+            
+            # Merge step returns combined
+            llm_mock.generate_structured.return_value = {"labels": ["L1", "L2", "L3_Merged"]}
+            
+            df = pd.DataFrame({"text": ["A", "B", "C", "D"]})
+            labels = strategy.suggest_labels(df, "ctx", pathlib.Path("."), n_labels=10)
+            
+            self.assertIn("L3_Merged", labels)
+            # Ensure SimpleStrategy was called twice (4 items / 2 batch_size)
+            self.assertEqual(mock_simple_instance.suggest_labels.call_count, 2)
+
+    def test_iterative_strategy_evolve(self):
+        # Test 'evolve' mode (Sequential Batches with history)
+        llm_mock = MagicMock()
+        strategy = IterativeDiscoveryStrategy(
+            llm_mock, 
+            mode="evolve",
+            batch_size=2
+        )
+        
+        # Mock _load_prompt
+        strategy._load_prompt = MagicMock(return_value="Prompt with {current_labels}")
+        
+        # Batch 1: Start empty, find ["L1"]
+        # Batch 2: Start with ["L1"], find ["L2"]
+        llm_mock.generate_structured.side_effect = [
+            {"labels": ["L1"]}, # Batch 1
+            {"labels": ["L2"]}  # Batch 2
+        ]
+        
+        df = pd.DataFrame({"text": ["A", "B", "C", "D"]})
+        labels = strategy.suggest_labels(df, "ctx", pathlib.Path("."), n_labels=10)
+        
+        self.assertIn("L1", labels)
+        self.assertIn("L2", labels)
+        self.assertEqual(len(labels), 2)
+        
+        # Check that prompts contained history
+        # call_args_list[0] -> Batch 1 prompting
+        # call_args_list[1] -> Batch 2 prompting
+        args_batch2, _ = llm_mock.generate_structured.call_args_list[1]
+        prompt_batch2 = args_batch2[0]
+        # In actual implementation we format list(set), order not guaranteed but presence is
+        self.assertIn("L1", prompt_batch2) 
 
 if __name__ == '__main__':
     unittest.main()
