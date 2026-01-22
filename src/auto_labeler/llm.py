@@ -67,3 +67,19 @@ class LLMAdapter:
         except json.JSONDecodeError:
             # Fallback or simple error handling for now
             raise ValueError(f"Failed to parse LLM response as JSON: {content}")
+    
+    def get_embedding(self, text: Union[str, List[str]], model: str = "text-embedding-3-small") -> Union[List[float], List[List[float]]]:
+        """
+        Generates embeddings for a string or list of strings.
+        """
+        response = litellm.embedding(
+            model=model,
+            input=text,
+            api_key=self.api_key
+        )
+        # Handle both single string and list inputs
+        data = response.data
+        if isinstance(text, str):
+            return data[0]["embedding"]
+        else:
+            return [item["embedding"] for item in data]

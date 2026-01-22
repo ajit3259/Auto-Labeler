@@ -10,3 +10,5 @@ from .discovery import (
     ParallelDiscoveryStrategy,
     IterativeDiscoveryStrategy
 )
+
+from .embedding import EmbeddingDiscoveryStrategy
