@@ -96,3 +96,33 @@ strategy = IterativeDiscoveryStrategy(
     batch_size=50
 )
 ```
+
+## 5. Embedding Discovery (Geometric)
+Finds labels by converting text into "Vectors" and clustering them geometrically. This is excellent for finding **Thematic Groups** in large datasets without relying on random text sampling.
+
+### Method: `K-Means` (Default)
+You specify `n_clusters`. Good if you know roughly how many categories you want.
+
+```python
+from auto_labeler.strategies import EmbeddingDiscoveryStrategy
+
+strategy = EmbeddingDiscoveryStrategy(
+    labeler.llm,
+    clustering_method="kmeans",
+    n_clusters=10, 
+    sample_size=1000 # Use a large sample for better geometry
+)
+labels = labeler.suggest_labels(df, context=context, strategy=strategy)
+```
+
+### Method: `DBSCAN`
+Automatically finds the number of clusters based on density. Good for noisy data, but requires tuning `eps`.
+
+```python
+strategy = EmbeddingDiscoveryStrategy(
+    labeler.llm,
+    clustering_method="dbscan",
+    eps=0.5,
+    min_samples=5
+)
+```
