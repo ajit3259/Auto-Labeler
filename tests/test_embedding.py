@@ -9,7 +9,7 @@ from sklearn.cluster import KMeans
 class TestEmbeddingStrategy(unittest.TestCase):
     def setUp(self):
         self.llm_mock = MagicMock()
-        self.strategy = EmbeddingDiscoveryStrategy(self.llm_mock, clustering_method="kmeans", n_clusters=2)
+        self.strategy = EmbeddingDiscoveryStrategy(self.llm_mock, clustering_method="kmeans", n_clusters=2, text_column="text")
         # Mock prompt loading
         self.strategy._load_prompt = MagicMock(return_value="Prompt with {centroid}")
         
@@ -45,7 +45,8 @@ class TestEmbeddingStrategy(unittest.TestCase):
             self.llm_mock, 
             clustering_method="dbscan", 
             eps=0.5, 
-            min_samples=2
+            min_samples=2,
+            text_column="text"
         )
         self.strategy._load_prompt = MagicMock(return_value="Prompt")
         

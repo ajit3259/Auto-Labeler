@@ -27,7 +27,8 @@ def main():
         labeler.llm,
         clustering_method="kmeans",
         n_clusters=2,
-        embedding_model="text-embedding-3-small"
+        embedding_model="text-embedding-3-small",
+        text_column="text"
     )
     
     labels = labeler.suggest_labels(df, "Logs", strategy=strategy)

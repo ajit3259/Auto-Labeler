@@ -22,7 +22,8 @@ class EmbeddingDiscoveryStrategy:
         eps: float = 0.5,
         min_samples: int = 5,
         sample_size: int = 100,
-        embedding_model: str = "text-embedding-3-small"
+        embedding_model: str = "text-embedding-3-small",
+        text_column: str = "text"
     ):
         self.llm = llm
         self.clustering_method = clustering_method
@@ -31,6 +32,7 @@ class EmbeddingDiscoveryStrategy:
         self.min_samples = min_samples
         self.sample_size = sample_size
         self.embedding_model = embedding_model
+        self.text_column = text_column
 
     def _load_prompt(self, prompts_dir: pathlib.Path, prompt_name: str) -> str:
         with open(prompts_dir / f"{prompt_name}.yaml", "r") as f:
@@ -47,7 +49,8 @@ class EmbeddingDiscoveryStrategy:
         # 1. Sample Data
         n = min(len(df), self.sample_size)
         sample_df = df.sample(n)
-        texts = sample_df["text"].tolist() # Assuming 'text' column
+        texts = sample_df[self.text_column].tolist()
+
         
         # 2. Embed
         embeddings = self.llm.get_embedding(texts, model=self.embedding_model)
