@@ -119,36 +119,59 @@ class TestStrategies(unittest.TestCase):
             mock_sample.assert_called()
 
     def test_iterative_strategy_refinement(self):
-        # Test that iterative strategy finds new labels from "Other" items
+        # Test 'refine' mode
         llm_mock = MagicMock()
         strategy = IterativeDiscoveryStrategy(
             llm_mock, 
+            mode="refine",
             seed_sample_size=2, 
-            validation_sample_size=5, 
+            batch_size=5, 
             other_threshold=1
         )
         
-        # Mock simple strategy internals to avoid real calls
-        # We need to patch SimpleDiscoveryStrategy within the module it's used
+        # Mock _load_prompt to avoid file I/O for classification prompt
+        strategy._load_prompt = MagicMock(return_value="Prompt")
+
         with patch('auto_labeler.strategies.discovery.SimpleDiscoveryStrategy') as MockSimple:
-            # 1. Seed Phase: Returns ["Label A"]
             mock_simple_instance = MockSimple.return_value
             mock_simple_instance.suggest_labels.side_effect = [
-                ["Label A"],  # First call (Seed)
-                ["Label B"]   # Second call (Refinement)
+                ["Label A"],  # Seed
+                ["Label B"]   # Refine
             ]
             
-            # 2. Sweep Phase: LLM returns some "Other" items
             llm_mock.generate_structured.return_value = {"other_items": ["Unseen Item 1"]}
             
-            df = pd.DataFrame({"text": ["A"] * 10}) # Dummy data
-            
+            df = pd.DataFrame({"text": ["A"] * 10})
             labels = strategy.suggest_labels(df, "ctx", pathlib.Path("."), n_labels=10)
             
-            # Should contain Seed (Label A) AND Refined (Label B)
             self.assertIn("Label A", labels)
             self.assertIn("Label B", labels)
-            self.assertEqual(len(labels), 2)
+
+    def test_iterative_strategy_aggregate(self):
+        # Test 'aggregate' mode (Independent batches -> Merge)
+        llm_mock = MagicMock()
+        strategy = IterativeDiscoveryStrategy(
+            llm_mock, 
+            mode="aggregate",
+            batch_size=2
+        )
+        
+        strategy._load_prompt = MagicMock(return_value="Prompt")
+
+        with patch('auto_labeler.strategies.discovery.SimpleDiscoveryStrategy') as MockSimple:
+            mock_simple_instance = MockSimple.return_value
+            # Batch 1 -> [L1], Batch 2 -> [L2]
+            mock_simple_instance.suggest_labels.side_effect = [["L1"], ["L2"]]
+            
+            # Merge step returns combined
+            llm_mock.generate_structured.return_value = {"labels": ["L1", "L2", "L3_Merged"]}
+            
+            df = pd.DataFrame({"text": ["A", "B", "C", "D"]})
+            labels = strategy.suggest_labels(df, "ctx", pathlib.Path("."), n_labels=10)
+            
+            self.assertIn("L3_Merged", labels)
+            # Ensure SimpleStrategy was called twice (4 items / 2 batch_size)
+            self.assertEqual(mock_simple_instance.suggest_labels.call_count, 2)
 
 if __name__ == '__main__':
     unittest.main()
