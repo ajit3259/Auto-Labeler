@@ -173,5 +173,39 @@ class TestStrategies(unittest.TestCase):
             # Ensure SimpleStrategy was called twice (4 items / 2 batch_size)
             self.assertEqual(mock_simple_instance.suggest_labels.call_count, 2)
 
+    def test_iterative_strategy_evolve(self):
+        # Test 'evolve' mode (Sequential Batches with history)
+        llm_mock = MagicMock()
+        strategy = IterativeDiscoveryStrategy(
+            llm_mock, 
+            mode="evolve",
+            batch_size=2
+        )
+        
+        # Mock _load_prompt
+        strategy._load_prompt = MagicMock(return_value="Prompt with {current_labels}")
+        
+        # Batch 1: Start empty, find ["L1"]
+        # Batch 2: Start with ["L1"], find ["L2"]
+        llm_mock.generate_structured.side_effect = [
+            {"labels": ["L1"]}, # Batch 1
+            {"labels": ["L2"]}  # Batch 2
+        ]
+        
+        df = pd.DataFrame({"text": ["A", "B", "C", "D"]})
+        labels = strategy.suggest_labels(df, "ctx", pathlib.Path("."), n_labels=10)
+        
+        self.assertIn("L1", labels)
+        self.assertIn("L2", labels)
+        self.assertEqual(len(labels), 2)
+        
+        # Check that prompts contained history
+        # call_args_list[0] -> Batch 1 prompting
+        # call_args_list[1] -> Batch 2 prompting
+        args_batch2, _ = llm_mock.generate_structured.call_args_list[1]
+        prompt_batch2 = args_batch2[0]
+        # In actual implementation we format list(set), order not guaranteed but presence is
+        self.assertIn("L1", prompt_batch2) 
+
 if __name__ == '__main__':
     unittest.main()

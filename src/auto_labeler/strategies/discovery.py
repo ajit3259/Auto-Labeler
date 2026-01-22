@@ -229,26 +229,38 @@ class IterativeDiscoveryStrategy:
     def _run_evolve(self, df: pd.DataFrame, context: str, prompts_dir: pathlib.Path, n_labels: int) -> List[str]:
         # Split dataframe into chunks of batch_size
         chunks = [df[i:i + self.batch_size] for i in range(0, len(df), self.batch_size)]
-        current_labels = []
+        
+        # Use a set for O(1) lookups and automatic deduplication
+        current_labels = set()
+        
+        evolve_prompt_template = self._load_prompt(prompts_dir, "discovery_evolve")
         
         for chunk in chunks:
-            # We treat the 'Existing Labels' as part of the context for the simple discovery prompt
-            # But SimpleDiscovery doesn't take 'existing_labels' param. 
-            # We simulate evolution by appending existing labels to context or using a specific prompt.
-            # Simpler approach: Just run SimpleDiscovery on the chunk, then Merge with current.
-            # Ideally, we'd tell the LLM "Here are current labels, improve them", but let's stick to Merge for stability.
+            sample = chunk.to_dict(orient="records")
             
-            chunk_strategy = SimpleDiscoveryStrategy(self.llm, sample_size=len(chunk))
-            # We append current labels to context to guide the LLM (Soft evolution)
-            evolved_context = f"{context}\n\nExisting Known Labels: {current_labels}"
-            new_labels = chunk_strategy.suggest_labels(chunk, evolved_context, prompts_dir, n_labels)
+            prompt = evolve_prompt_template.format(
+                context=context,
+                current_labels=list(current_labels),
+                sample=sample
+            )
             
-            # Simple union update
-            for label in new_labels:
-                if label not in current_labels:
-                    current_labels.append(label)
+            try:
+                schema = {
+                    "type": "object",
+                    "properties": {
+                        "labels": {"type": "array", "items": {"type": "string"}}
+                    },
+                    "required": ["labels"]
+                }
+                response = self.llm.generate_structured(prompt, response_schema=schema)
+                new_labels = response.get("labels", [])
+                
+                # Update set with new labels
+                current_labels.update(new_labels)
+            except Exception:
+                continue
         
-        return current_labels[:n_labels]
+        return list(current_labels)[:n_labels]
 
     def _run_aggregate(self, df: pd.DataFrame, context: str, prompts_dir: pathlib.Path, n_labels: int) -> List[str]:
         # Split into chunks, get labels for each independently

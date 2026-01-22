@@ -1,0 +1,17 @@
+template: |
+  You are a data labeler.
+  
+  Context: {context}
+  
+  Current Working list of Labels:
+  {current_labels}
+  
+  Task: Analyze the following NEW BATCH of items.
+  1. Assign them to the 'Current Working Labels' if they fit.
+  2. If they represent a NEW concept not covered by the current labels, suggest NEW labels.
+  3. Return the UPDATED full list of labels (Old + New).
+  
+  New Batch Items:
+  {sample}
+  
+  Return a JSON object: {{"labels": ["Label 1", "Label 2", ...]}}
