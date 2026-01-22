@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import MagicMock, patch
 import pandas as pd
 from auto_labeler.strategies.labeling import ConsensusLabelingStrategy, SimpleLabelingStrategy
-from auto_labeler.strategies.discovery import ParallelDiscoveryStrategy, SimpleDiscoveryStrategy
+from auto_labeler.strategies.discovery import ParallelDiscoveryStrategy, SimpleDiscoveryStrategy, IterativeDiscoveryStrategy
 from auto_labeler.llm import LLMAdapter
 import pathlib
 
@@ -117,6 +117,38 @@ class TestStrategies(unittest.TestCase):
         with patch.object(pd.DataFrame, 'sample', return_value=pd.DataFrame({"text": ["A"]})) as mock_sample:
             strategy.suggest_labels(df, "ctx", pathlib.Path("."))
             mock_sample.assert_called()
+
+    def test_iterative_strategy_refinement(self):
+        # Test that iterative strategy finds new labels from "Other" items
+        llm_mock = MagicMock()
+        strategy = IterativeDiscoveryStrategy(
+            llm_mock, 
+            seed_sample_size=2, 
+            validation_sample_size=5, 
+            other_threshold=1
+        )
+        
+        # Mock simple strategy internals to avoid real calls
+        # We need to patch SimpleDiscoveryStrategy within the module it's used
+        with patch('auto_labeler.strategies.discovery.SimpleDiscoveryStrategy') as MockSimple:
+            # 1. Seed Phase: Returns ["Label A"]
+            mock_simple_instance = MockSimple.return_value
+            mock_simple_instance.suggest_labels.side_effect = [
+                ["Label A"],  # First call (Seed)
+                ["Label B"]   # Second call (Refinement)
+            ]
+            
+            # 2. Sweep Phase: LLM returns some "Other" items
+            llm_mock.generate_structured.return_value = {"other_items": ["Unseen Item 1"]}
+            
+            df = pd.DataFrame({"text": ["A"] * 10}) # Dummy data
+            
+            labels = strategy.suggest_labels(df, "ctx", pathlib.Path("."), n_labels=10)
+            
+            # Should contain Seed (Label A) AND Refined (Label B)
+            self.assertIn("Label A", labels)
+            self.assertIn("Label B", labels)
+            self.assertEqual(len(labels), 2)
 
 if __name__ == '__main__':
     unittest.main()

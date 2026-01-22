@@ -7,5 +7,6 @@ from .labeling import (
 from .discovery import (
     DiscoveryStrategy,
     SimpleDiscoveryStrategy,
-    ParallelDiscoveryStrategy
+    ParallelDiscoveryStrategy,
+    IterativeDiscoveryStrategy
 )
