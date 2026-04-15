@@ -4,4 +4,8 @@ import warnings
 # These are harmless noise in this context.
 warnings.filterwarnings("ignore", message=".*Pydantic serializer warnings.*", category=UserWarning)
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
+
+from .core import AutoLabeler
+
+__all__ = ["AutoLabeler"]
