@@ -1,6 +1,7 @@
 from typing import List, Protocol, Optional, Union, Dict
 import pandas as pd
 from ..llm import LLMAdapter
+from ..utils import resolve_label
 import pathlib
 import yaml
 import asyncio
@@ -106,10 +107,16 @@ class SimpleLabelingStrategy:
                 }
                 response = self.llm.generate_structured(prompt, response_schema=schema)
                 assigned_label = response.get("label")
-                
+
                 if not multi_label and isinstance(assigned_label, list):
                     assigned_label = assigned_label[0] if assigned_label else None
-                
+
+                if not multi_label:
+                    resolved = resolve_label(assigned_label, labels)
+                    if resolved is None and assigned_label is not None:
+                        logger.warning(f"LLM returned label '{assigned_label}' not in allowed list — marking None")
+                    assigned_label = resolved
+
                 label_results.append(assigned_label)
             except Exception as e:
                 logger.error(f"Error in simple labeling: {e}")
@@ -178,14 +185,18 @@ class SimpleLabelingStrategy:
                 for res in results:
                     rid = res.get("id")
                     label = res.get("label")
+                    if not multi_label:
+                        resolved = resolve_label(label, labels)
+                        if resolved is None and label is not None:
+                            logger.warning(f"LLM returned label '{label}' not in allowed list — marking None")
+                        label = resolved
                     if rid is not None and rid in df.index:
-                        # Find position of index in original result_df
                         pos = df.index.get_loc(rid)
                         label_results[pos] = label
-                        
+
             except Exception as e:
                 logger.error(f"Error in batched labeling chunk {chunk_idx}: {e}")
-                
+
         result_df['label'] = label_results
         return result_df
 

@@ -1,5 +1,27 @@
 import pandas as pd
-from typing import Optional, Tuple
+from typing import Optional, Tuple, List, Union
+
+def resolve_label(
+    predicted: Union[str, None],
+    allowed: List[str],
+) -> Union[str, None]:
+    """
+    Validates and normalises a label returned by the LLM against the allowed list.
+
+    Matching order:
+    1. Exact match — returned as-is.
+    2. Case-insensitive match — returns the correctly-cased version from allowed.
+    3. No match — returns None (caller should log a warning).
+    """
+    if predicted is None:
+        return None
+    if predicted in allowed:
+        return predicted
+    lower_map = {label.lower(): label for label in allowed}
+    if predicted.lower() in lower_map:
+        return lower_map[predicted.lower()]
+    return None
+
 
 def load_data(
     csv_path: str, 
