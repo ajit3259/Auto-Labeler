@@ -5,6 +5,7 @@ import pathlib
 import yaml
 import asyncio
 from jinja2 import Template
+from ..logger import logger
 
 class LabelingStrategy(Protocol):
     """
@@ -111,7 +112,7 @@ class SimpleLabelingStrategy:
                 
                 label_results.append(assigned_label)
             except Exception as e:
-                print(f"Error in simple labeling: {e}")
+                logger.error(f"Error in simple labeling: {e}")
                 label_results.append(None)
         
         result_df['predicted_label'] = label_results
@@ -183,7 +184,7 @@ class SimpleLabelingStrategy:
                         label_results[pos] = label
                         
             except Exception as e:
-                print(f"Error in batched labeling chunk {chunk_idx}: {e}")
+                logger.error(f"Error in batched labeling chunk {chunk_idx}: {e}")
                 
         result_df['predicted_label'] = label_results
         return result_df
@@ -251,7 +252,7 @@ class SimpleLabelingStrategy:
                 else:
                     return [{"id": items[0]["id"], "label": response.get("label")}]
             except Exception as e:
-                print(f"Error in async labeling chunk: {e}")
+                logger.error(f"Error in async labeling chunk: {e}")
                 return []
 
         # Run all chunks concurrently
@@ -345,7 +346,7 @@ class ConsensusLabelingStrategy:
                         val = val[0] if val else None
                     votes.append(val)
                 except Exception as e:
-                    print(f"Error in consensus vote: {e}")
+                    logger.error(f"Error in consensus vote: {e}")
                     votes.append(None)
             
             # 2. Check Consensus
@@ -416,7 +417,7 @@ class HierarchicalLabelingStrategy:
         categories = list(self.taxonomy.keys())
         simple_strategy = SimpleLabelingStrategy(self.llm)
         
-        print(f"Pass 1: Identifying Categories ({categories})...")
+        logger.info(f"Pass 1: Identifying Categories ({categories})...")
         df_with_cats = simple_strategy.label(
             df=df,
             labels=categories,
@@ -429,7 +430,7 @@ class HierarchicalLabelingStrategy:
         df_with_cats = df_with_cats.rename(columns={"predicted_label": "predicted_category"})
         
         # Pass 2: Sub-category Labeling
-        print("Pass 2: Identifying Sub-categories...")
+        logger.info("Pass 2: Identifying Sub-categories...")
         sub_results = []
         
         for _, row in df_with_cats.iterrows():

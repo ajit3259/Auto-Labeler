@@ -4,6 +4,7 @@ from ..llm import LLMAdapter
 import pathlib
 import yaml
 from jinja2 import Template
+from ..logger import logger
 
 class DiscoveryStrategy(Protocol):
     """
@@ -82,7 +83,8 @@ class SimpleDiscoveryStrategy:
         try:
             response = self.llm.generate_structured(prompt, response_schema=schema)
             return response.get("labels", [])
-        except Exception:
+        except Exception as e:
+            logger.error(f"Error in simple discovery: {e}")
             return []
 
 class ParallelDiscoveryStrategy:
@@ -136,7 +138,8 @@ class ParallelDiscoveryStrategy:
                 response = self.llm.generate_structured(prompt, response_schema=schema)
                 labels = response.get("labels", [])
                 all_labels.update(labels)
-            except Exception:
+            except Exception as e:
+                logger.error(f"Error in parallel discovery sample: {e}")
                 continue
         
         return list(all_labels)[:n_labels] if len(all_labels) > n_labels else list(all_labels)
@@ -213,7 +216,8 @@ class IterativeDiscoveryStrategy:
             }
             response = self.llm.generate_structured(prompt, response_schema=schema)
             other_items = response.get("other_items", [])
-        except Exception:
+        except Exception as e:
+            logger.error(f"Error in refine sweep: {e}")
             pass
 
         # --- Phase 3: Refine ---
@@ -262,7 +266,8 @@ class IterativeDiscoveryStrategy:
                 
                 # Update set with new labels
                 current_labels.update(new_labels)
-            except Exception:
+            except Exception as e:
+                logger.error(f"Error in evolve chunk: {e}")
                 continue
         
         return list(current_labels)[:n_labels]
@@ -296,7 +301,8 @@ class IterativeDiscoveryStrategy:
             response = self.llm.generate_structured(prompt, response_schema=schema)
             final_labels = response.get("labels", [])
             return final_labels
-        except Exception:
+        except Exception as e:
+            logger.error(f"Error in aggregate merge: {e}")
             # Fallback: Flatten and distinct
             flat_labels = list(set([lbl for sublist in all_label_lists for lbl in sublist]))
             return flat_labels[:n_labels]

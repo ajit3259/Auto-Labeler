@@ -7,6 +7,7 @@ import yaml
 from jinja2 import Template
 from sklearn.cluster import KMeans, DBSCAN
 from sklearn.metrics import pairwise_distances_argmin_min
+from ..logger import logger
 
 class EmbeddingDiscoveryStrategy:
     """
@@ -142,7 +143,7 @@ class EmbeddingDiscoveryStrategy:
                 if label:
                     discovered_labels.add(label)
             except Exception as e:
-                print(f"Error discovering label for cluster {cluster_id}: {e}")
+                logger.error(f"Error discovering label for cluster {cluster_id}: {e}")
                 continue
                 
         return list(discovered_labels)[:n_labels]
