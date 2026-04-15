@@ -2,33 +2,42 @@
 
 An AI-powered data labeling library for Python.
 
-## Features
-- **Discovery**: Automatically suggests labels/taxonomy from your data.
-- **Assignment**: labels your dataset using LLMs (via LiteLLM).
-- **Flexible**: Works with CSVs and Pandas DataFrames.
+## Key Features
+- **🔍 Discovery**: Automatically suggest labels/taxonomy using Iterative or Embedding-based discovery.
+- **🏷️ Assignment**: Labels your dataset using LLMs (Gemini, OpenAI, Anthropic, etc.).
+- **⚡ Batching & Async**: High-throughput processing for large datasets.
+- **💾 Disk Caching**: Save costs and time with local persistence.
+- **💰 cost Tracking**: Real-time USD cost estimation for every run.
+- **🛡️ Validation**: Pydantic-powered fail-fast checks for your data.
 
 ## Installation
 ```bash
 pip install auto-labeler
 ```
 
-## Testing
-To run the automated tests:
-```bash
-python -m unittest discover tests
+## Quick Start
+```python
+from auto_labeler import AutoLabeler
+import pandas as pd
+
+labeler = AutoLabeler(model_name="gemini/gemini-flash-latest")
+results = labeler.label_dataset(
+    pd.read_csv("data.csv"),
+    labels=["Urgent", "Billing", "General"],
+    context="Customer support tickets"
+)
+print(labeler.get_usage())
 ```
 
-## Supported Models
-We use [LiteLLM](https://docs.litellm.ai/docs/providers) under the hood, so you can use almost any LLM provider.
-Pass the model name in the `model_name` argument (e.g., `gpt-4o`, `gemini/gemini-1.5-flash`, `claude-3-opus`).
+## Documentation
+For full guides on Advanced discovery, Caching, and API reference, visit our:
+👉 **[Documentation Site](https://ajit3259.github.io/Auto-Labeler)**
 
-See the [LiteLLM Providers Docs](https://docs.litellm.ai/docs/providers) for the exact string format for your provider.
+## Testing
+```bash
+pytest
+```
 
-## Features & Documentation
-- **[Advanced Usage Guide](docs/advanced_usage.md)**: Learn about Consensus, Smart Discovery, and Few-Shot Learning.
-- **Labeling Strategies**: Choose between Speed (Simple) or Accuracy (Consensus).
-- **Smart Discovery**: Automatically find edge-case labels using parallel sampling.
-- **Domain Knowledge**: Teach the AI with "Few-Shot" examples for higher accuracy.
-- **Flexible Backend**: Works with OpenAI, Gemini, Anthropic, and more via LiteLLM.
-- **Pandas Integration**: Native dataframe support.
+## License
+MIT
 

@@ -4,6 +4,26 @@ version = "0.1.0"
 description = "A pragmatic AI-powered data labeling library."
 readme = "README.md"
 requires-python = ">=3.9"
+authors = [
+    { name = "Ajit Kumar" }
+]
+keywords = ["ai", "nlp", "labeling", "llm", "data-science", "annotation"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
+[project.urls]
+Homepage = "https://github.com/ajit3259/Auto-Labeler"
+Repository = "https://github.com/ajit3259/Auto-Labeler"
+Documentation = "https://ajit3259.github.io/Auto-Labeler"
+
 dependencies = [
     "pandas>=2.0.0",
     "litellm>=1.0.0",

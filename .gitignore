@@ -37,3 +37,9 @@ venv.bak/
 
 # Project
 demo_data.csv
+.auto_labeler_cache/
+.pytest_cache/
+site/
+test_db.db
+.test_cache/
+.test_raw_cache/

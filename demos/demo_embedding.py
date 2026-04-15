@@ -33,6 +33,11 @@ def main():
     
     labels = labeler.suggest_labels(df, "Logs", strategy=strategy)
     print("✅ Discovered:", labels)
+    
+    print("\n--- Usage Stats ---")
+    usage = labeler.get_usage()
+    print(f"Total Tokens: {usage['total_tokens']}")
+    print(f"Estimated Cost: ${usage['total_cost_usd']:.4f}")
 
 if __name__ == "__main__":
     main()

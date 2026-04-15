@@ -89,7 +89,7 @@ def main():
     # 5. Consensus Mode Demo
     print("\n--- Phase 3: Consensus & Confidence ---")
     time.sleep(10) # Avoid Rate Limits
-    print("Running with 3 judges (gemini-2.5-flash-lite, gemini-3-flash-preview)...")
+    print("Running with 3 judges (Gemini Flash)...")
     
     from auto_labeler.strategies import ConsensusLabelingStrategy
     
@@ -101,7 +101,7 @@ def main():
     
     # Create api_keys dict for all models using the single key we have
     api_keys_map = {m: api_key for m in models_list}
-    api_keys_map["gemini/gemini-3-pro-preview"] = api_key
+    api_keys_map["gemini/gemini-1.5-pro"] = api_key
 
     consensus_strategy = ConsensusLabelingStrategy(
         models=models_list,
@@ -118,6 +118,12 @@ def main():
     
     print("\nConsensus Results:")
     print(consensus_df[["text", "predicted_label", "confidence_level"]])
+
+    # 6. Final Usage Check
+    print("\n--- Final Session Stats ---")
+    usage = labeler.get_usage()
+    print(f"Total Tokens: {usage['total_tokens']}")
+    print(f"Estimated Cost: ${usage['total_cost_usd']:.4f}")
 
     # Cleanup
     if os.path.exists(dummy_csv):
