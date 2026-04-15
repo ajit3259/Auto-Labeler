@@ -12,6 +12,12 @@ class AutoLabeler:
         self.llm = LLMAdapter(model_name=model_name, api_key=api_key)
         self.prompts_dir = pathlib.Path(__file__).parent / "prompts"
 
+    def get_usage(self) -> dict:
+        """
+        Returns a summary of token usage for the current session.
+        """
+        return self.llm.tracker.get_summary()
+
     def _load_prompt(self, prompt_name: str) -> str:
         with open(self.prompts_dir / f"{prompt_name}.yaml", "r") as f:
             data = yaml.safe_load(f)

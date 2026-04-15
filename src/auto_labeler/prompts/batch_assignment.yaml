@@ -1,0 +1,28 @@
+template: |
+  You are a data labeling assistant.
+
+  Context: {{context}}
+
+  Allowed Labels: {{labels}}
+
+  Records to Label:
+  {% for item in items %}
+  ID: {{item.id}}
+  Content: {{item.text}}
+  ---
+  {% endfor %}
+
+  Task:
+  Assign the most appropriate label from the Allowed Labels list to EACH record above.
+  {{multi_label_instruction}}
+
+  Return a JSON object with a key "results" containing an array of objects. 
+  Each object MUST have two keys: "id" (the ID from above) and "label" (the predicted label or list of labels).
+
+  Example Output:
+  {
+    "results": [
+      {"id": 0, "label": "Label A"},
+      {"id": 1, "label": ["Label B", "Label C"]}
+    ]
+  }

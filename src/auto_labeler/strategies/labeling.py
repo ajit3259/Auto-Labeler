@@ -3,6 +3,7 @@ import pandas as pd
 from ..llm import LLMAdapter
 import pathlib
 import yaml
+import asyncio
 from jinja2 import Template
 
 class LabelingStrategy(Protocol):
@@ -42,8 +43,14 @@ class SimpleLabelingStrategy:
     A cost-effective strategy that uses a single LLM call per record.
     Best for simple tasks or initial passes.
     """
-    def __init__(self, llm: LLMAdapter):
+    def __init__(self, llm: LLMAdapter, batch_size: int = 1):
+        """
+        Args:
+            llm: The LLM adapter to use.
+            batch_size: Number of records to process in a single LLM call. Default is 1.
+        """
         self.llm = llm
+        self.batch_size = batch_size
 
     def _load_prompt(self, prompts_dir: pathlib.Path, prompt_name: str) -> str:
         with open(prompts_dir / f"{prompt_name}.yaml", "r") as f:
@@ -60,11 +67,12 @@ class SimpleLabelingStrategy:
         multi_label: bool = False,
         examples: Optional[List[Dict[str, str]]] = None
     ) -> pd.DataFrame:
+        if self.batch_size > 1:
+            return self._label_batched(df, labels, context, prompts_dir, target_column, multi_label, examples)
+        
         result_df = df.copy()
         label_results = []
         prompt_template = self._load_prompt(prompts_dir, "assignment")
-        
-        # TODO: Implement batch processing to reduce the number of LLM calls (send N records per prompt).
         
         multi_label_instruction = 'Select strictly one label.' if not multi_label else 'Select one or more labels.'
         output_format_instruction = 'a string' if not multi_label else 'a list of strings'
@@ -74,7 +82,6 @@ class SimpleLabelingStrategy:
         for index, row in result_df.iterrows():
             record_content = row[target_column] if target_column in row else str(row.to_dict())
             
-            # Render with Jinja2
             prompt = template.render(
                 context=context,
                 labels=labels,
@@ -107,6 +114,159 @@ class SimpleLabelingStrategy:
                 print(f"Error in simple labeling: {e}")
                 label_results.append(None)
         
+        result_df['predicted_label'] = label_results
+        return result_df
+
+    def _label_batched(
+        self, 
+        df: pd.DataFrame, 
+        labels: List[str], 
+        context: str, 
+        prompts_dir: pathlib.Path,
+        target_column: str = "text",
+        multi_label: bool = False,
+        examples: Optional[List[Dict[str, str]]] = None
+    ) -> pd.DataFrame:
+        result_df = df.copy()
+        label_results = [None] * len(df)
+        prompt_template = self._load_prompt(prompts_dir, "batch_assignment")
+        template = Template(prompt_template)
+        
+        multi_label_instruction = 'Select strictly one label per record.' if not multi_label else 'Select one or more labels per record.'
+        
+        # Chunk the dataframe
+        chunks = [df[i:i + self.batch_size] for i in range(0, len(df), self.batch_size)]
+        
+        for chunk_idx, chunk in enumerate(chunks):
+            # Formulate items with IDs relative to the original dataframe
+            items = []
+            for i, (idx, row) in enumerate(chunk.iterrows()):
+                content = row[target_column] if target_column in row else str(row.to_dict())
+                items.append({"id": idx, "text": content})
+            
+            prompt = template.render(
+                context=context,
+                labels=labels,
+                items=items,
+                multi_label_instruction=multi_label_instruction,
+                examples=examples
+            )
+            
+            try:
+                schema = {
+                    "type": "object",
+                    "properties": {
+                        "results": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "id": {"type": "integer"},
+                                    "label": {"type": "string" if not multi_label else "array"}
+                                },
+                                "required": ["id", "label"]
+                            }
+                        }
+                    },
+                    "required": ["results"]
+                }
+                response = self.llm.generate_structured(prompt, response_schema=schema)
+                results = response.get("results", [])
+                
+                # Map results back to the original index
+                for res in results:
+                    rid = res.get("id")
+                    label = res.get("label")
+                    if rid is not None and rid in df.index:
+                        # Find position of index in original result_df
+                        pos = df.index.get_loc(rid)
+                        label_results[pos] = label
+                        
+            except Exception as e:
+                print(f"Error in batched labeling chunk {chunk_idx}: {e}")
+                
+        result_df['predicted_label'] = label_results
+        return result_df
+
+    async def alabel(
+        self, 
+        df: pd.DataFrame, 
+        labels: List[str], 
+        context: str, 
+        prompts_dir: pathlib.Path,
+        target_column: str = "text",
+        multi_label: bool = False,
+        examples: Optional[List[Dict[str, str]]] = None
+    ) -> pd.DataFrame:
+        """
+        Asynchronous labeling with parallelized batch execution.
+        """
+        result_df = df.copy()
+        label_results = [None] * len(df)
+        prompt_template = self._load_prompt(prompts_dir, "batch_assignment" if self.batch_size > 1 else "assignment")
+        template = Template(prompt_template)
+        
+        multi_label_instruction = 'Select strictly one label per record.' if not multi_label else 'Select one or more labels per record.'
+        
+        chunks = [df[i:i + self.batch_size] for i in range(0, len(df), self.batch_size)]
+        
+        async def process_chunk(chunk):
+            items = []
+            for idx, row in chunk.iterrows():
+                content = row[target_column] if target_column in row else str(row.to_dict())
+                items.append({"id": idx, "text": content})
+            
+            # Use different prompt logic for batch vs single
+            if self.batch_size > 1:
+                prompt = template.render(context=context, labels=labels, items=items, multi_label_instruction=multi_label_instruction, examples=examples)
+                schema = {
+                    "type": "object",
+                    "properties": {
+                        "results": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {"id": {"type": "integer"}, "label": {"type": "string" if not multi_label else "array"}},
+                                "required": ["id", "label"]
+                            }
+                        }
+                    },
+                    "required": ["results"]
+                }
+            else:
+                # Single item fallback (still wrapped in async)
+                item = items[0]
+                prompt = template.render(
+                    context=context, labels=labels, record_content=item["text"], 
+                    multi_label_instruction=multi_label_instruction, 
+                    output_format_instruction='a string' if not multi_label else 'a list of strings',
+                    examples=examples
+                )
+                schema = {"type": "object", "properties": {"label": {"type": "string" if not multi_label else "array"}}, "required": ["label"]}
+
+            try:
+                response = await self.llm.agenerate_structured(prompt, response_schema=schema)
+                if self.batch_size > 1:
+                    return response.get("results", [])
+                else:
+                    return [{"id": items[0]["id"], "label": response.get("label")}]
+            except Exception as e:
+                print(f"Error in async labeling chunk: {e}")
+                return []
+
+        # Run all chunks concurrently
+        tasks = [process_chunk(chunk) for chunk in chunks]
+        chunk_responses = await asyncio.gather(*tasks)
+        
+        # Merge all responses
+        for response_list in chunk_responses:
+            for res in response_list:
+                rid = res.get("id")
+                label = res.get("label")
+                if rid is not None and rid in df.index:
+                    pos = df.index.get_loc(rid)
+                    label_results[pos] = label
+                    
         result_df['predicted_label'] = label_results
         return result_df
 

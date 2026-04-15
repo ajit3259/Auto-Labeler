@@ -13,8 +13,12 @@ dependencies = [
     "scikit-learn",
     "numpy",
     "python-dotenv",
-    "pyyaml"
+    "pyyaml",
+    "click"
 ]
+
+[project.scripts]
+auto-labeler = "auto_labeler.cli:main"
 
 [build-system]
 requires = ["hatchling"]
