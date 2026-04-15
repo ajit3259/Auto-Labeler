@@ -1,11 +1,11 @@
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field
 from typing import List, Optional, Dict, Union, Any
 import pathlib
 
 class LabelingConfig(BaseModel):
     """Configuration for labeling operations."""
     context: str = Field(..., description="Description of the dataset context.")
-    labels: List[str] = Field(..., min_items=1, description="List of allowed labels.")
+    labels: List[str] = Field(..., min_length=1, description="List of allowed labels.")
     target_column: str = Field("text", description="Column containing text to label.")
     multi_label: bool = Field(False, description="Whether to allow multiple labels per record.")
     batch_size: int = Field(1, ge=1, description="Number of records per LLM call.")

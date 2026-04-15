@@ -45,6 +45,7 @@ nav:
   - Home: index.md
   - Getting Started: getting-started.md
   - Features:
+      - Choosing a Strategy: features/choosing-a-strategy.md
       - Label Discovery: features/discovery.md
       - Labeling Strategies: features/labeling.md
       - Caching & Telemetry: features/telemetry.md
