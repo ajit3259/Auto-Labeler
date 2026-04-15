@@ -1,7 +1,8 @@
 from .labeling import (
     LabelingStrategy,
     SimpleLabelingStrategy,
-    ConsensusLabelingStrategy
+    ConsensusLabelingStrategy,
+    HierarchicalLabelingStrategy
 )
 
 from .discovery import (

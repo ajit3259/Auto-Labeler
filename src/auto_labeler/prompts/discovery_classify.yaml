@@ -1,16 +1,16 @@
 template: |
   You are a data labeler.
   
-  Context: {context}
+  Context: {{context}}
   
   Existing Labels:
-  {labels}
+  {{labels}}
   
   Task: Classify the following VALIDATION ITEMS into the Existing Labels.
   If an item clearly does not fit any existing label, classify it as "Other".
   
   Validation Items:
-  {items}
+  {{items}}
   
-  Return a JSON object: {{"other_items": ["text of item 1", "text of item 2"]}}
+  Return a JSON object: {"other_items": ["text of item 1", "text of item 2"]}
   Only return items classified as "Other".

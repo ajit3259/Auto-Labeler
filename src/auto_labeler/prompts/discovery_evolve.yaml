@@ -1,10 +1,10 @@
 template: |
   You are a data labeler.
   
-  Context: {context}
+  Context: {{context}}
   
   Current Working list of Labels:
-  {current_labels}
+  {{current_labels}}
   
   Task: Analyze the following NEW BATCH of items.
   1. Assign them to the 'Current Working Labels' if they fit.
@@ -12,6 +12,6 @@ template: |
   3. Return the UPDATED full list of labels (Old + New).
   
   New Batch Items:
-  {sample}
+  {{sample}}
   
-  Return a JSON object: {{"labels": ["Label 1", "Label 2", ...]}}
+  Return a JSON object: {"labels": ["Label 1", "Label 2", ...]}

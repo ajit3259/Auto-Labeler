@@ -14,7 +14,7 @@ def main():
 
     print("Initializing AutoLabeler...")
     # Using Gemini via LiteLLM
-    labeler = AutoLabeler(model_name="gemini/gemini-2.5-flash-lite", api_key=api_key)
+    labeler = AutoLabeler(model_name="gemini/gemini-flash-latest", api_key=api_key)
 
     # 2. Load Data (Creating dummy data for demo purposes)
     print("Creating sample data...")
@@ -94,9 +94,9 @@ def main():
     from auto_labeler.strategies import ConsensusLabelingStrategy
     
     models_list = [
-        "gemini/gemini-2.5-flash-lite", 
-        "gemini/gemini-3-flash-preview", 
-        "gemini/gemini-2.5-flash-lite"
+        "gemini/gemini-flash-latest", 
+        "gemini/gemini-flash-latest", 
+        "gemini/gemini-flash-latest"
     ]
     
     # Create api_keys dict for all models using the single key we have
@@ -105,7 +105,7 @@ def main():
 
     consensus_strategy = ConsensusLabelingStrategy(
         models=models_list,
-        adjudicator_model="gemini/gemini-3-pro-preview",
+        adjudicator_model="gemini/gemini-1.5-pro",
         api_keys=api_keys_map
     )
     

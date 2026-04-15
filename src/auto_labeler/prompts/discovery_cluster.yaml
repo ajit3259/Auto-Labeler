@@ -1,17 +1,17 @@
 template: |
   You are a data analyst.
   
-  Context: {context}
+  Context: {{context}}
   
   I have clustered the data and found a distinct group.
   
   The "Centroid" (most representative item) is:
-  "{centroid}"
+  "{{centroid}}"
   
   Here are other random examples from this group:
-  {samples}
+  {{samples}}
   
   Task: Provide a SINGLE, specific label that best describes this group.
   Avoid generic labels like "Issues" or "Other". Be specific (e.g., "Login Timeout", "Payment Gateway Error").
   
-  Return a JSON object: {{"label": "Your Label"}}
+  Return a JSON object: {"label": "Your Label"}

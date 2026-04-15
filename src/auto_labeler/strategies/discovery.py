@@ -3,6 +3,7 @@ import pandas as pd
 from ..llm import LLMAdapter
 import pathlib
 import yaml
+from jinja2 import Template
 
 class DiscoveryStrategy(Protocol):
     """
@@ -63,7 +64,8 @@ class SimpleDiscoveryStrategy:
         sample = sample_df.to_dict(orient="records")
         
         prompt_template = self._load_prompt(prompts_dir, "discovery")
-        prompt = prompt_template.format(
+        template = Template(prompt_template)
+        prompt = template.render(
             context=context,
             sample=sample,
             n_labels=n_labels
@@ -107,15 +109,16 @@ class ParallelDiscoveryStrategy:
     ) -> List[str]:
         all_labels = set()
         prompt_template = self._load_prompt(prompts_dir, "discovery")
+        template = Template(prompt_template)
         
         for _ in range(self.num_samples):
-            # Sample with replacement allowed if df is small, otherwise distinct
+            # Sample selection logic
             if len(df) > self.sample_size:
                 sample = df.sample(self.sample_size).to_dict(orient="records")
             else:
                 sample = df.to_dict(orient="records")
             
-            prompt = prompt_template.format(
+            prompt = template.render(
                 context=context,
                 sample=sample,
                 n_labels=n_labels
@@ -192,7 +195,8 @@ class IterativeDiscoveryStrategy:
         validation_records = validation_df.to_dict(orient="records")
 
         classify_prompt = self._load_prompt(prompts_dir, "discovery_classify")
-        prompt = classify_prompt.format(
+        template = Template(classify_prompt)
+        prompt = template.render(
             context=context,
             labels=seed_labels,
             items=validation_records
@@ -234,11 +238,12 @@ class IterativeDiscoveryStrategy:
         current_labels = set()
         
         evolve_prompt_template = self._load_prompt(prompts_dir, "discovery_evolve")
+        template = Template(evolve_prompt_template)
         
         for chunk in chunks:
             sample = chunk.to_dict(orient="records")
             
-            prompt = evolve_prompt_template.format(
+            prompt = template.render(
                 context=context,
                 current_labels=list(current_labels),
                 sample=sample
@@ -274,7 +279,8 @@ class IterativeDiscoveryStrategy:
             
         # Merge Step
         merge_prompt_template = self._load_prompt(prompts_dir, "discovery_merge")
-        prompt = merge_prompt_template.format(
+        template = Template(merge_prompt_template)
+        prompt = template.render(
             context=context,
             label_lists=all_label_lists
         )

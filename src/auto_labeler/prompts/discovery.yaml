@@ -2,11 +2,11 @@ template: |
   You are an expert data taxonomist.
 
   Context about this dataset:
-  {context}
+  {{context}}
 
   Here is a sample of the data (first 10 rows):
-  {sample}
+  {{sample}}
 
   Task:
-  Analyze this data and suggest exactly {n_labels} distinct labels (categories/tags) that would be suitable for classifying this data.
+  Analyze this data and suggest exactly {{n_labels}} distinct labels (categories/tags) that would be suitable for classifying this data.
   Return a JSON object with a single key "labels" containing the list of strings.

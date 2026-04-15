@@ -11,7 +11,7 @@ from auto_labeler.strategies.embedding import EmbeddingDiscoveryStrategy
 def main():
     load_dotenv()
     print("🚀 Initializing...")
-    labeler = AutoLabeler()
+    labeler = AutoLabeler(model_name="gemini/gemini-flash-latest")
 
     # Data with 2 distinct themes
     data = {"text": [
@@ -27,7 +27,7 @@ def main():
         labeler.llm,
         clustering_method="kmeans",
         n_clusters=2,
-        embedding_model="text-embedding-3-small",
+        embedding_model="gemini/gemini-embedding-001",
         text_column="text"
     )
     

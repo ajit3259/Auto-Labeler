@@ -85,7 +85,18 @@ class SimpleLabelingStrategy:
             )
             
             try:
-                response = self.llm.generate_structured(prompt, response_schema={})
+                schema = {
+                    "type": "object",
+                    "properties": {
+                        "label": {
+                            "type": "string" if not multi_label else "array",
+                            "items": {"type": "string"} if multi_label else None,
+                            "description": "The predicted label(s) for the content."
+                        }
+                    },
+                    "required": ["label"]
+                }
+                response = self.llm.generate_structured(prompt, response_schema=schema)
                 assigned_label = response.get("label")
                 
                 if not multi_label and isinstance(assigned_label, list):
@@ -93,6 +104,7 @@ class SimpleLabelingStrategy:
                 
                 label_results.append(assigned_label)
             except Exception as e:
+                print(f"Error in simple labeling: {e}")
                 label_results.append(None)
         
         result_df['predicted_label'] = label_results
@@ -212,3 +224,84 @@ class ConsensusLabelingStrategy:
         result_df['predicted_label'] = label_results
         result_df['confidence_level'] = confidence_results
         return result_df
+
+class HierarchicalLabelingStrategy:
+    """
+    A strategy for labeling with a Category > Sub-category structure.
+    Performs two passes:
+    1. Classifies the high-level Category.
+    2. Classifies the Sub-category based on the predicted Category.
+    """
+    def __init__(self, llm: LLMAdapter, taxonomy: Dict[str, List[str]]):
+        """
+        Args:
+            llm: The LLM adapter to use.
+            taxonomy: A dictionary mapping categories to lists of sub-categories.
+                      Example: {"Finance": ["Payment", "Refund"], "Tech": ["Server", "DB"]}
+        """
+        self.llm = llm
+        self.taxonomy = taxonomy
+
+    def label(
+        self, 
+        df: pd.DataFrame, 
+        labels: List[str], # This will be ignored in favor of taxonomy keys first
+        context: str, 
+        prompts_dir: pathlib.Path,
+        target_column: str = "text",
+        multi_label: bool = False,
+        examples: Optional[List[Dict[str, str]]] = None
+    ) -> pd.DataFrame:
+        # Pass 1: Category Labeling
+        categories = list(self.taxonomy.keys())
+        simple_strategy = SimpleLabelingStrategy(self.llm)
+        
+        print(f"Pass 1: Identifying Categories ({categories})...")
+        df_with_cats = simple_strategy.label(
+            df=df,
+            labels=categories,
+            context=context,
+            prompts_dir=prompts_dir,
+            target_column=target_column,
+            multi_label=False, # Hierarchical category is usually single
+            examples=examples
+        )
+        df_with_cats = df_with_cats.rename(columns={"predicted_label": "predicted_category"})
+        
+        # Pass 2: Sub-category Labeling
+        print("Pass 2: Identifying Sub-categories...")
+        sub_results = []
+        
+        for _, row in df_with_cats.iterrows():
+            category = row["predicted_category"]
+            if category not in self.taxonomy:
+                sub_results.append(None)
+                continue
+            
+            sub_labels = self.taxonomy[category]
+            record_content = row[target_column]
+            
+            # Formulate sub-context
+            sub_context = f"{context} This item is confirmed to be in the '{category}' category."
+            
+            # Localized labeling for this specific record
+            temp_df = pd.DataFrame([row])
+            res = simple_strategy.label(
+                df=temp_df,
+                labels=sub_labels,
+                context=sub_context,
+                prompts_dir=prompts_dir,
+                target_column=target_column,
+                multi_label=multi_label,
+                examples=None # Examples might need to be specific to sub-category, for now skip
+            )
+            sub_results.append(res["predicted_label"].iloc[0])
+            
+        df_with_cats["predicted_sub_label"] = sub_results
+        # Final combined label (optional, but good for compatibility)
+        df_with_cats["predicted_label"] = df_with_cats.apply(
+            lambda r: f"{r['predicted_category']} > {r['predicted_sub_label']}" if r['predicted_sub_label'] else r['predicted_category'], 
+            axis=1
+        )
+        
+        return df_with_cats

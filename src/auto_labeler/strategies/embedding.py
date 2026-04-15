@@ -4,6 +4,7 @@ import numpy as np
 from ..llm import LLMAdapter
 import pathlib
 import yaml
+from jinja2 import Template
 from sklearn.cluster import KMeans, DBSCAN
 from sklearn.metrics import pairwise_distances_argmin_min
 
@@ -56,11 +57,18 @@ class EmbeddingDiscoveryStrategy:
         embeddings = self.llm.get_embedding(texts, model=self.embedding_model)
         X = np.array(embeddings)
         
+        # 2b. Normalize embeddings (Important for high-dimensional cosine similarity via KMeans)
+        # This also helps avoid sklearn RuntimeWarnings with extreme values
+        norms = np.linalg.norm(X, axis=1, keepdims=True)
+        # Avoid division by zero
+        norms[norms == 0] = 1.0
+        X = X / norms
+        
         # 3. Cluster
         if self.clustering_method == "kmeans":
             # If requested clusters > sample size, cap it
             k = min(self.n_clusters, len(X))
-            kmeans = KMeans(n_clusters=k, random_state=42)
+            kmeans = KMeans(n_clusters=k, random_state=42, n_init="auto")
             kmeans.fit(X)
             labels = kmeans.labels_
             centroids = kmeans.cluster_centers_
@@ -93,10 +101,6 @@ class EmbeddingDiscoveryStrategy:
         
         unique_cluster_ids = set(labels) if self.clustering_method == "kmeans" else set(valid_cluster_indices)
         
-        # Iterate through valid clusters (up to n_labels or n_clusters)
-        # Note: If we have many clusters, we need to pick the best. 
-        # For Kmeans, we iterate all (since K is controlled).
-        
         for i, cluster_id in enumerate(unique_cluster_ids):
             if cluster_id == -1: continue
             
@@ -118,7 +122,8 @@ class EmbeddingDiscoveryStrategy:
             cluster_samples = [texts[idx] for idx in sample_indices]
             
             # Formulate prompt
-            prompt = cluster_prompt_template.format(
+            template = Template(cluster_prompt_template)
+            prompt = template.render(
                 context=context,
                 centroid=centroid_text,
                 samples=cluster_samples
@@ -136,7 +141,8 @@ class EmbeddingDiscoveryStrategy:
                 label = response.get("label")
                 if label:
                     discovered_labels.add(label)
-            except Exception:
+            except Exception as e:
+                print(f"Error discovering label for cluster {cluster_id}: {e}")
                 continue
                 
         return list(discovered_labels)[:n_labels]

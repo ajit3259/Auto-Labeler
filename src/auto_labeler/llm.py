@@ -52,21 +52,33 @@ class LLMAdapter:
             messages.append({"role": "system", "content": system_prompt})
         messages.append({"role": "user", "content": prompt})
         
-        # Litellm supports response_format={"type": "json_object"} for many providers
+        # Litellm supports response_format with schema for many providers
         response = litellm.completion(
             model=self.model_name,
             api_key=self.api_key,
             messages=messages,
-            response_format={"type": "json_object"},
+            response_format=response_schema if response_schema else {"type": "json_object"},
             num_retries=3
         )
         
         content = response.choices[0].message.content
+        
+        # Clean markdown code blocks if present
+        clean_content = content.strip()
+        if clean_content.startswith("```"):
+            # Remove ```json or just ```
+            lines = clean_content.splitlines()
+            if lines[0].startswith("```"):
+                lines = lines[1:]
+            if lines and lines[-1].startswith("```"):
+                lines = lines[:-1]
+            clean_content = "\n".join(lines).strip()
+            
         try:
-            return json.loads(content)
+            return json.loads(clean_content)
         except json.JSONDecodeError:
             # Fallback or simple error handling for now
-            raise ValueError(f"Failed to parse LLM response as JSON: {content}")
+            raise ValueError(f"Failed to parse LLM response as JSON: {clean_content}")
     
     def get_embedding(self, text: Union[str, List[str]], model: str = "text-embedding-3-small") -> Union[List[float], List[List[float]]]:
         """

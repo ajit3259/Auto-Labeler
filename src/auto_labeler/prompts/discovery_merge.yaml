@@ -1,7 +1,7 @@
 template: |
   You are a data expert.
   
-  Context: {context}
+  Context: {{context}}
   
   Task: You are given multiple lists of labels discovered from different batches of data.
   Your goal is to merge them into a SINGLE, coherent, unique list of labels.
@@ -9,6 +9,6 @@ template: |
   Keep distinct labels separate.
   
   Input Label Lists:
-  {label_lists}
+  {{label_lists}}
   
-  Return a JSON object: {{"labels": ["Label 1", "Label 2", ...]}}
+  Return a JSON object: {"labels": ["Label 1", "Label 2", ...]}
