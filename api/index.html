@@ -1263,7 +1263,7 @@ Orchestrates discovery and labeling tasks using various strategies.</p>
 <a id="__codelineno-0-13" name="__codelineno-0-13"></a><span class="sd">    &quot;&quot;&quot;</span>
 <a id="__codelineno-0-14" name="__codelineno-0-14"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
 <a id="__codelineno-0-15" name="__codelineno-0-15"></a>        <span class="bp">self</span><span class="p">,</span> 
-<a id="__codelineno-0-16" name="__codelineno-0-16"></a>        <span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;gemini/gemini-flash-latest&quot;</span><span class="p">,</span> 
+<a id="__codelineno-0-16" name="__codelineno-0-16"></a>        <span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;gemini/gemini-2.5-flash&quot;</span><span class="p">,</span> 
 <a id="__codelineno-0-17" name="__codelineno-0-17"></a>        <span class="n">api_key</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <a id="__codelineno-0-18" name="__codelineno-0-18"></a>        <span class="n">use_cache</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
 <a id="__codelineno-0-19" name="__codelineno-0-19"></a>        <span class="n">cache_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;.auto_labeler_cache&quot;</span><span class="p">,</span>
@@ -1396,7 +1396,7 @@ Orchestrates discovery and labeling tasks using various strategies.</p>
 
 
 <h4 id="auto_labeler.core.AutoLabeler.__init__" class="doc doc-heading">
-            <code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">model_name</span><span class="o">=</span><span class="s1">&#39;gemini/gemini-flash-latest&#39;</span><span class="p">,</span> <span class="n">api_key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">use_cache</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">cache_dir</span><span class="o">=</span><span class="s1">&#39;.auto_labeler_cache&#39;</span><span class="p">,</span> <span class="n">log_level</span><span class="o">=</span><span class="s1">&#39;INFO&#39;</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">model_name</span><span class="o">=</span><span class="s1">&#39;gemini/gemini-2.5-flash&#39;</span><span class="p">,</span> <span class="n">api_key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">use_cache</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">cache_dir</span><span class="o">=</span><span class="s1">&#39;.auto_labeler_cache&#39;</span><span class="p">,</span> <span class="n">log_level</span><span class="o">=</span><span class="s1">&#39;INFO&#39;</span><span class="p">)</span></code>
 
 </h4>
 
@@ -1438,7 +1438,7 @@ Orchestrates discovery and labeling tasks using various strategies.</p>
 <span class="normal"><a href="#__codelineno-0-41">41</a></span>
 <span class="normal"><a href="#__codelineno-0-42">42</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-14" name="__codelineno-0-14"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
 <a id="__codelineno-0-15" name="__codelineno-0-15"></a>    <span class="bp">self</span><span class="p">,</span> 
-<a id="__codelineno-0-16" name="__codelineno-0-16"></a>    <span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;gemini/gemini-flash-latest&quot;</span><span class="p">,</span> 
+<a id="__codelineno-0-16" name="__codelineno-0-16"></a>    <span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;gemini/gemini-2.5-flash&quot;</span><span class="p">,</span> 
 <a id="__codelineno-0-17" name="__codelineno-0-17"></a>    <span class="n">api_key</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <a id="__codelineno-0-18" name="__codelineno-0-18"></a>    <span class="n">use_cache</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
 <a id="__codelineno-0-19" name="__codelineno-0-19"></a>    <span class="n">cache_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;.auto_labeler_cache&quot;</span><span class="p">,</span>
@@ -1947,7 +1947,26 @@ Supports persistent disk caching of responses.</p>
 <span class="normal"><a href="#__codelineno-0-272">272</a></span>
 <span class="normal"><a href="#__codelineno-0-273">273</a></span>
 <span class="normal"><a href="#__codelineno-0-274">274</a></span>
-<span class="normal"><a href="#__codelineno-0-275">275</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-50" name="__codelineno-0-50"></a><span class="k">class</span><span class="w"> </span><span class="nc">LLMAdapter</span><span class="p">:</span>
+<span class="normal"><a href="#__codelineno-0-275">275</a></span>
+<span class="normal"><a href="#__codelineno-0-276">276</a></span>
+<span class="normal"><a href="#__codelineno-0-277">277</a></span>
+<span class="normal"><a href="#__codelineno-0-278">278</a></span>
+<span class="normal"><a href="#__codelineno-0-279">279</a></span>
+<span class="normal"><a href="#__codelineno-0-280">280</a></span>
+<span class="normal"><a href="#__codelineno-0-281">281</a></span>
+<span class="normal"><a href="#__codelineno-0-282">282</a></span>
+<span class="normal"><a href="#__codelineno-0-283">283</a></span>
+<span class="normal"><a href="#__codelineno-0-284">284</a></span>
+<span class="normal"><a href="#__codelineno-0-285">285</a></span>
+<span class="normal"><a href="#__codelineno-0-286">286</a></span>
+<span class="normal"><a href="#__codelineno-0-287">287</a></span>
+<span class="normal"><a href="#__codelineno-0-288">288</a></span>
+<span class="normal"><a href="#__codelineno-0-289">289</a></span>
+<span class="normal"><a href="#__codelineno-0-290">290</a></span>
+<span class="normal"><a href="#__codelineno-0-291">291</a></span>
+<span class="normal"><a href="#__codelineno-0-292">292</a></span>
+<span class="normal"><a href="#__codelineno-0-293">293</a></span>
+<span class="normal"><a href="#__codelineno-0-294">294</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-50" name="__codelineno-0-50"></a><span class="k">class</span><span class="w"> </span><span class="nc">LLMAdapter</span><span class="p">:</span>
 <a id="__codelineno-0-51" name="__codelineno-0-51"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <a id="__codelineno-0-52" name="__codelineno-0-52"></a><span class="sd">    A unified wrapper around LiteLLM to handle different providers (OpenAI, Gemini, etc.)</span>
 <a id="__codelineno-0-53" name="__codelineno-0-53"></a><span class="sd">    and standard interactions like text generation and structured outputs.</span>
@@ -2148,31 +2167,50 @@ Supports persistent disk caching of responses.</p>
 <a id="__codelineno-0-248" name="__codelineno-0-248"></a>        <span class="k">except</span> <span class="n">json</span><span class="o">.</span><span class="n">JSONDecodeError</span><span class="p">:</span>
 <a id="__codelineno-0-249" name="__codelineno-0-249"></a>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to parse LLM response as JSON: </span><span class="si">{</span><span class="n">clean_content</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 <a id="__codelineno-0-250" name="__codelineno-0-250"></a>
-<a id="__codelineno-0-251" name="__codelineno-0-251"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_embedding</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">model</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;text-embedding-3-small&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]]:</span>
-<a id="__codelineno-0-252" name="__codelineno-0-252"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<a id="__codelineno-0-253" name="__codelineno-0-253"></a><span class="sd">        Generates embeddings for a string or list of strings.</span>
-<a id="__codelineno-0-254" name="__codelineno-0-254"></a><span class="sd">        &quot;&quot;&quot;</span>
-<a id="__codelineno-0-255" name="__codelineno-0-255"></a>        <span class="n">cache_key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_cache_key</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">text</span><span class="p">),</span> <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;split_embedding&quot;</span><span class="p">)</span>
-<a id="__codelineno-0-256" name="__codelineno-0-256"></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache</span> <span class="ow">and</span> <span class="n">cache_key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="p">:</span>
-<a id="__codelineno-0-257" name="__codelineno-0-257"></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="p">[</span><span class="n">cache_key</span><span class="p">]</span>
-<a id="__codelineno-0-258" name="__codelineno-0-258"></a>
-<a id="__codelineno-0-259" name="__codelineno-0-259"></a>        <span class="n">response</span> <span class="o">=</span> <span class="n">litellm</span><span class="o">.</span><span class="n">embedding</span><span class="p">(</span>
-<a id="__codelineno-0-260" name="__codelineno-0-260"></a>            <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
-<a id="__codelineno-0-261" name="__codelineno-0-261"></a>            <span class="nb">input</span><span class="o">=</span><span class="n">text</span><span class="p">,</span>
-<a id="__codelineno-0-262" name="__codelineno-0-262"></a>            <span class="n">api_key</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">api_key</span>
-<a id="__codelineno-0-263" name="__codelineno-0-263"></a>        <span class="p">)</span>
-<a id="__codelineno-0-264" name="__codelineno-0-264"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">tracker</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+<a id="__codelineno-0-251" name="__codelineno-0-251"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_default_embedding_model</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<a id="__codelineno-0-252" name="__codelineno-0-252"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Derives a sensible embedding model from the adapter&#39;s LLM model name.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-253" name="__codelineno-0-253"></a>        <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+<a id="__codelineno-0-254" name="__codelineno-0-254"></a>        <span class="k">if</span> <span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;gemini/&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;google/&quot;</span><span class="p">):</span>
+<a id="__codelineno-0-255" name="__codelineno-0-255"></a>            <span class="k">return</span> <span class="s2">&quot;gemini/text-embedding-004&quot;</span>
+<a id="__codelineno-0-256" name="__codelineno-0-256"></a>        <span class="k">if</span> <span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;anthropic/&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;claude&quot;</span><span class="p">):</span>
+<a id="__codelineno-0-257" name="__codelineno-0-257"></a>            <span class="c1"># Anthropic has no native embedding API; fall back to OpenAI default</span>
+<a id="__codelineno-0-258" name="__codelineno-0-258"></a>            <span class="k">return</span> <span class="s2">&quot;text-embedding-3-small&quot;</span>
+<a id="__codelineno-0-259" name="__codelineno-0-259"></a>        <span class="c1"># OpenAI and everything else</span>
+<a id="__codelineno-0-260" name="__codelineno-0-260"></a>        <span class="k">return</span> <span class="s2">&quot;text-embedding-3-small&quot;</span>
+<a id="__codelineno-0-261" name="__codelineno-0-261"></a>
+<a id="__codelineno-0-262" name="__codelineno-0-262"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_embedding</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">model</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]]:</span>
+<a id="__codelineno-0-263" name="__codelineno-0-263"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<a id="__codelineno-0-264" name="__codelineno-0-264"></a><span class="sd">        Generates embeddings for a string or list of strings.</span>
 <a id="__codelineno-0-265" name="__codelineno-0-265"></a>
-<a id="__codelineno-0-266" name="__codelineno-0-266"></a>        <span class="c1"># Handle both single string and list inputs</span>
-<a id="__codelineno-0-267" name="__codelineno-0-267"></a>        <span class="n">data</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span>
-<a id="__codelineno-0-268" name="__codelineno-0-268"></a>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-<a id="__codelineno-0-269" name="__codelineno-0-269"></a>            <span class="n">result</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;embedding&quot;</span><span class="p">]</span>
-<a id="__codelineno-0-270" name="__codelineno-0-270"></a>        <span class="k">else</span><span class="p">:</span>
-<a id="__codelineno-0-271" name="__codelineno-0-271"></a>            <span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;embedding&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">data</span><span class="p">]</span>
-<a id="__codelineno-0-272" name="__codelineno-0-272"></a>
-<a id="__codelineno-0-273" name="__codelineno-0-273"></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-274" name="__codelineno-0-274"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="p">[</span><span class="n">cache_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span>
-<a id="__codelineno-0-275" name="__codelineno-0-275"></a>        <span class="k">return</span> <span class="n">result</span>
+<a id="__codelineno-0-266" name="__codelineno-0-266"></a><span class="sd">        Args:</span>
+<a id="__codelineno-0-267" name="__codelineno-0-267"></a><span class="sd">            text: String or list of strings to embed.</span>
+<a id="__codelineno-0-268" name="__codelineno-0-268"></a><span class="sd">            model: Embedding model to use. Defaults to a provider-appropriate model</span>
+<a id="__codelineno-0-269" name="__codelineno-0-269"></a><span class="sd">                   derived from the adapter&#39;s LLM (e.g. ``gemini/text-embedding-004``</span>
+<a id="__codelineno-0-270" name="__codelineno-0-270"></a><span class="sd">                   for Gemini users, ``text-embedding-3-small`` for OpenAI users).</span>
+<a id="__codelineno-0-271" name="__codelineno-0-271"></a><span class="sd">        &quot;&quot;&quot;</span>
+<a id="__codelineno-0-272" name="__codelineno-0-272"></a>        <span class="k">if</span> <span class="n">model</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-273" name="__codelineno-0-273"></a>            <span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_embedding_model</span><span class="p">()</span>
+<a id="__codelineno-0-274" name="__codelineno-0-274"></a>        <span class="n">cache_key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_cache_key</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">text</span><span class="p">),</span> <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;split_embedding&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-275" name="__codelineno-0-275"></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache</span> <span class="ow">and</span> <span class="n">cache_key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="p">:</span>
+<a id="__codelineno-0-276" name="__codelineno-0-276"></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="p">[</span><span class="n">cache_key</span><span class="p">]</span>
+<a id="__codelineno-0-277" name="__codelineno-0-277"></a>
+<a id="__codelineno-0-278" name="__codelineno-0-278"></a>        <span class="n">response</span> <span class="o">=</span> <span class="n">litellm</span><span class="o">.</span><span class="n">embedding</span><span class="p">(</span>
+<a id="__codelineno-0-279" name="__codelineno-0-279"></a>            <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+<a id="__codelineno-0-280" name="__codelineno-0-280"></a>            <span class="nb">input</span><span class="o">=</span><span class="n">text</span><span class="p">,</span>
+<a id="__codelineno-0-281" name="__codelineno-0-281"></a>            <span class="n">api_key</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">api_key</span>
+<a id="__codelineno-0-282" name="__codelineno-0-282"></a>        <span class="p">)</span>
+<a id="__codelineno-0-283" name="__codelineno-0-283"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">tracker</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+<a id="__codelineno-0-284" name="__codelineno-0-284"></a>
+<a id="__codelineno-0-285" name="__codelineno-0-285"></a>        <span class="c1"># Handle both single string and list inputs</span>
+<a id="__codelineno-0-286" name="__codelineno-0-286"></a>        <span class="n">data</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span>
+<a id="__codelineno-0-287" name="__codelineno-0-287"></a>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+<a id="__codelineno-0-288" name="__codelineno-0-288"></a>            <span class="n">result</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;embedding&quot;</span><span class="p">]</span>
+<a id="__codelineno-0-289" name="__codelineno-0-289"></a>        <span class="k">else</span><span class="p">:</span>
+<a id="__codelineno-0-290" name="__codelineno-0-290"></a>            <span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;embedding&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">data</span><span class="p">]</span>
+<a id="__codelineno-0-291" name="__codelineno-0-291"></a>
+<a id="__codelineno-0-292" name="__codelineno-0-292"></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-293" name="__codelineno-0-293"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="p">[</span><span class="n">cache_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span>
+<a id="__codelineno-0-294" name="__codelineno-0-294"></a>        <span class="k">return</span> <span class="n">result</span>
 </code></pre></div></td></tr></table></div>
               </details>
 
@@ -2721,7 +2759,7 @@ Uses JSON mode where available or prompts the model to output JSON.</p>
 
 
 <h4 id="auto_labeler.llm.LLMAdapter.get_embedding" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">get_embedding</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s1">&#39;text-embedding-3-small&#39;</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">get_embedding</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
 
 </h4>
 
@@ -2731,20 +2769,58 @@ Uses JSON mode where available or prompts the model to output JSON.</p>
         <p>Generates embeddings for a string or list of strings.</p>
 
 
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>text</code>
+            </td>
+            <td>
+                  <code><span title="typing.Union">Union</span>[<span title="str">str</span>, <span title="typing.List">List</span>[<span title="str">str</span>]]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>String or list of strings to embed.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>model</code>
+            </td>
+            <td>
+                  <code><span title="typing.Optional">Optional</span>[<span title="str">str</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Embedding model to use. Defaults to a provider-appropriate model
+   derived from the adapter's LLM (e.g. <code>gemini/text-embedding-004</code>
+   for Gemini users, <code>text-embedding-3-small</code> for OpenAI users).</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/auto_labeler/llm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-251">251</a></span>
-<span class="normal"><a href="#__codelineno-0-252">252</a></span>
-<span class="normal"><a href="#__codelineno-0-253">253</a></span>
-<span class="normal"><a href="#__codelineno-0-254">254</a></span>
-<span class="normal"><a href="#__codelineno-0-255">255</a></span>
-<span class="normal"><a href="#__codelineno-0-256">256</a></span>
-<span class="normal"><a href="#__codelineno-0-257">257</a></span>
-<span class="normal"><a href="#__codelineno-0-258">258</a></span>
-<span class="normal"><a href="#__codelineno-0-259">259</a></span>
-<span class="normal"><a href="#__codelineno-0-260">260</a></span>
-<span class="normal"><a href="#__codelineno-0-261">261</a></span>
-<span class="normal"><a href="#__codelineno-0-262">262</a></span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-262">262</a></span>
 <span class="normal"><a href="#__codelineno-0-263">263</a></span>
 <span class="normal"><a href="#__codelineno-0-264">264</a></span>
 <span class="normal"><a href="#__codelineno-0-265">265</a></span>
@@ -2757,31 +2833,58 @@ Uses JSON mode where available or prompts the model to output JSON.</p>
 <span class="normal"><a href="#__codelineno-0-272">272</a></span>
 <span class="normal"><a href="#__codelineno-0-273">273</a></span>
 <span class="normal"><a href="#__codelineno-0-274">274</a></span>
-<span class="normal"><a href="#__codelineno-0-275">275</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-251" name="__codelineno-0-251"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_embedding</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">model</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;text-embedding-3-small&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]]:</span>
-<a id="__codelineno-0-252" name="__codelineno-0-252"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<a id="__codelineno-0-253" name="__codelineno-0-253"></a><span class="sd">    Generates embeddings for a string or list of strings.</span>
-<a id="__codelineno-0-254" name="__codelineno-0-254"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-255" name="__codelineno-0-255"></a>    <span class="n">cache_key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_cache_key</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">text</span><span class="p">),</span> <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;split_embedding&quot;</span><span class="p">)</span>
-<a id="__codelineno-0-256" name="__codelineno-0-256"></a>    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache</span> <span class="ow">and</span> <span class="n">cache_key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="p">:</span>
-<a id="__codelineno-0-257" name="__codelineno-0-257"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="p">[</span><span class="n">cache_key</span><span class="p">]</span>
-<a id="__codelineno-0-258" name="__codelineno-0-258"></a>
-<a id="__codelineno-0-259" name="__codelineno-0-259"></a>    <span class="n">response</span> <span class="o">=</span> <span class="n">litellm</span><span class="o">.</span><span class="n">embedding</span><span class="p">(</span>
-<a id="__codelineno-0-260" name="__codelineno-0-260"></a>        <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
-<a id="__codelineno-0-261" name="__codelineno-0-261"></a>        <span class="nb">input</span><span class="o">=</span><span class="n">text</span><span class="p">,</span>
-<a id="__codelineno-0-262" name="__codelineno-0-262"></a>        <span class="n">api_key</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">api_key</span>
-<a id="__codelineno-0-263" name="__codelineno-0-263"></a>    <span class="p">)</span>
-<a id="__codelineno-0-264" name="__codelineno-0-264"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">tracker</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+<span class="normal"><a href="#__codelineno-0-275">275</a></span>
+<span class="normal"><a href="#__codelineno-0-276">276</a></span>
+<span class="normal"><a href="#__codelineno-0-277">277</a></span>
+<span class="normal"><a href="#__codelineno-0-278">278</a></span>
+<span class="normal"><a href="#__codelineno-0-279">279</a></span>
+<span class="normal"><a href="#__codelineno-0-280">280</a></span>
+<span class="normal"><a href="#__codelineno-0-281">281</a></span>
+<span class="normal"><a href="#__codelineno-0-282">282</a></span>
+<span class="normal"><a href="#__codelineno-0-283">283</a></span>
+<span class="normal"><a href="#__codelineno-0-284">284</a></span>
+<span class="normal"><a href="#__codelineno-0-285">285</a></span>
+<span class="normal"><a href="#__codelineno-0-286">286</a></span>
+<span class="normal"><a href="#__codelineno-0-287">287</a></span>
+<span class="normal"><a href="#__codelineno-0-288">288</a></span>
+<span class="normal"><a href="#__codelineno-0-289">289</a></span>
+<span class="normal"><a href="#__codelineno-0-290">290</a></span>
+<span class="normal"><a href="#__codelineno-0-291">291</a></span>
+<span class="normal"><a href="#__codelineno-0-292">292</a></span>
+<span class="normal"><a href="#__codelineno-0-293">293</a></span>
+<span class="normal"><a href="#__codelineno-0-294">294</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-262" name="__codelineno-0-262"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_embedding</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">model</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]]:</span>
+<a id="__codelineno-0-263" name="__codelineno-0-263"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<a id="__codelineno-0-264" name="__codelineno-0-264"></a><span class="sd">    Generates embeddings for a string or list of strings.</span>
 <a id="__codelineno-0-265" name="__codelineno-0-265"></a>
-<a id="__codelineno-0-266" name="__codelineno-0-266"></a>    <span class="c1"># Handle both single string and list inputs</span>
-<a id="__codelineno-0-267" name="__codelineno-0-267"></a>    <span class="n">data</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span>
-<a id="__codelineno-0-268" name="__codelineno-0-268"></a>    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-<a id="__codelineno-0-269" name="__codelineno-0-269"></a>        <span class="n">result</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;embedding&quot;</span><span class="p">]</span>
-<a id="__codelineno-0-270" name="__codelineno-0-270"></a>    <span class="k">else</span><span class="p">:</span>
-<a id="__codelineno-0-271" name="__codelineno-0-271"></a>        <span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;embedding&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">data</span><span class="p">]</span>
-<a id="__codelineno-0-272" name="__codelineno-0-272"></a>
-<a id="__codelineno-0-273" name="__codelineno-0-273"></a>    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-274" name="__codelineno-0-274"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="p">[</span><span class="n">cache_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span>
-<a id="__codelineno-0-275" name="__codelineno-0-275"></a>    <span class="k">return</span> <span class="n">result</span>
+<a id="__codelineno-0-266" name="__codelineno-0-266"></a><span class="sd">    Args:</span>
+<a id="__codelineno-0-267" name="__codelineno-0-267"></a><span class="sd">        text: String or list of strings to embed.</span>
+<a id="__codelineno-0-268" name="__codelineno-0-268"></a><span class="sd">        model: Embedding model to use. Defaults to a provider-appropriate model</span>
+<a id="__codelineno-0-269" name="__codelineno-0-269"></a><span class="sd">               derived from the adapter&#39;s LLM (e.g. ``gemini/text-embedding-004``</span>
+<a id="__codelineno-0-270" name="__codelineno-0-270"></a><span class="sd">               for Gemini users, ``text-embedding-3-small`` for OpenAI users).</span>
+<a id="__codelineno-0-271" name="__codelineno-0-271"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-272" name="__codelineno-0-272"></a>    <span class="k">if</span> <span class="n">model</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-273" name="__codelineno-0-273"></a>        <span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_embedding_model</span><span class="p">()</span>
+<a id="__codelineno-0-274" name="__codelineno-0-274"></a>    <span class="n">cache_key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_cache_key</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">text</span><span class="p">),</span> <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;split_embedding&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-275" name="__codelineno-0-275"></a>    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache</span> <span class="ow">and</span> <span class="n">cache_key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="p">:</span>
+<a id="__codelineno-0-276" name="__codelineno-0-276"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="p">[</span><span class="n">cache_key</span><span class="p">]</span>
+<a id="__codelineno-0-277" name="__codelineno-0-277"></a>
+<a id="__codelineno-0-278" name="__codelineno-0-278"></a>    <span class="n">response</span> <span class="o">=</span> <span class="n">litellm</span><span class="o">.</span><span class="n">embedding</span><span class="p">(</span>
+<a id="__codelineno-0-279" name="__codelineno-0-279"></a>        <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+<a id="__codelineno-0-280" name="__codelineno-0-280"></a>        <span class="nb">input</span><span class="o">=</span><span class="n">text</span><span class="p">,</span>
+<a id="__codelineno-0-281" name="__codelineno-0-281"></a>        <span class="n">api_key</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">api_key</span>
+<a id="__codelineno-0-282" name="__codelineno-0-282"></a>    <span class="p">)</span>
+<a id="__codelineno-0-283" name="__codelineno-0-283"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">tracker</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+<a id="__codelineno-0-284" name="__codelineno-0-284"></a>
+<a id="__codelineno-0-285" name="__codelineno-0-285"></a>    <span class="c1"># Handle both single string and list inputs</span>
+<a id="__codelineno-0-286" name="__codelineno-0-286"></a>    <span class="n">data</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span>
+<a id="__codelineno-0-287" name="__codelineno-0-287"></a>    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+<a id="__codelineno-0-288" name="__codelineno-0-288"></a>        <span class="n">result</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;embedding&quot;</span><span class="p">]</span>
+<a id="__codelineno-0-289" name="__codelineno-0-289"></a>    <span class="k">else</span><span class="p">:</span>
+<a id="__codelineno-0-290" name="__codelineno-0-290"></a>        <span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;embedding&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">data</span><span class="p">]</span>
+<a id="__codelineno-0-291" name="__codelineno-0-291"></a>
+<a id="__codelineno-0-292" name="__codelineno-0-292"></a>    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-293" name="__codelineno-0-293"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="p">[</span><span class="n">cache_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span>
+<a id="__codelineno-0-294" name="__codelineno-0-294"></a>    <span class="k">return</span> <span class="n">result</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
