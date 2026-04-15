@@ -8,6 +8,7 @@ on:
       - 'docs/**'
       - 'mkdocs.yml'
       - 'src/**'  # Rebuild if docstrings change
+      - '.github/workflows/deploy-docs.yml'
 
 permissions:
   contents: write
