@@ -1124,6 +1124,7 @@
     <div class="doc doc-contents first">
 
 
+
         <p>Main entry point for the Auto-Labeler library.
 Orchestrates discovery and labeling tasks using various strategies.</p>
 
@@ -1134,7 +1135,7 @@ Orchestrates discovery and labeling tasks using various strategies.</p>
 
 
 
-              <details class="quote">
+              <details class="mkdocstrings-source">
                 <summary>Source code in <code>src/auto_labeler/core.py</code></summary>
                 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-9">  9</a></span>
 <span class="normal"><a href="#__codelineno-0-10"> 10</a></span>
@@ -1380,7 +1381,7 @@ Orchestrates discovery and labeling tasks using various strategies.</p>
 
 
 
-  <div class="doc doc-children">
+<div class="doc doc-children">
 
 
 
@@ -1405,7 +1406,7 @@ Orchestrates discovery and labeling tasks using various strategies.</p>
         <p>Initialize the AutoLabeler with model configuration and preferences.</p>
 
 
-            <details class="quote">
+            <details class="mkdocstrings-source">
               <summary>Source code in <code>src/auto_labeler/core.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-14">14</a></span>
 <span class="normal"><a href="#__codelineno-0-15">15</a></span>
@@ -1484,7 +1485,7 @@ Orchestrates discovery and labeling tasks using various strategies.</p>
         <p>Returns a summary of token usage and estimated cost for the current session.</p>
 
 
-            <details class="quote">
+            <details class="mkdocstrings-source">
               <summary>Source code in <code>src/auto_labeler/core.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-44">44</a></span>
 <span class="normal"><a href="#__codelineno-0-45">45</a></span>
@@ -1515,7 +1516,7 @@ Orchestrates discovery and labeling tasks using various strategies.</p>
         <p>Labels the dataset using the provided labels and context.</p>
 
 
-            <details class="quote">
+            <details class="mkdocstrings-source">
               <summary>Source code in <code>src/auto_labeler/core.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-86"> 86</a></span>
 <span class="normal"><a href="#__codelineno-0-87"> 87</a></span>
@@ -1622,7 +1623,7 @@ Orchestrates discovery and labeling tasks using various strategies.</p>
         <p>Suggests a list of labels based on the dataset content and context.</p>
 
 
-            <details class="quote">
+            <details class="mkdocstrings-source">
               <summary>Source code in <code>src/auto_labeler/core.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-57">57</a></span>
 <span class="normal"><a href="#__codelineno-0-58">58</a></span>
@@ -1707,6 +1708,7 @@ Orchestrates discovery and labeling tasks using various strategies.</p>
     <div class="doc doc-contents first">
 
 
+
         <p>A unified wrapper around LiteLLM to handle different providers (OpenAI, Gemini, etc.)
 and standard interactions like text generation and structured outputs.
 Supports persistent disk caching of responses.</p>
@@ -1718,7 +1720,7 @@ Supports persistent disk caching of responses.</p>
 
 
 
-              <details class="quote">
+              <details class="mkdocstrings-source">
                 <summary>Source code in <code>src/auto_labeler/llm.py</code></summary>
                 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-50"> 50</a></span>
 <span class="normal"><a href="#__codelineno-0-51"> 51</a></span>
@@ -2176,7 +2178,7 @@ Supports persistent disk caching of responses.</p>
 
 
 
-  <div class="doc doc-children">
+<div class="doc doc-children">
 
 
 
@@ -2295,7 +2297,7 @@ Supports persistent disk caching of responses.</p>
     </table>
 
 
-            <details class="quote">
+            <details class="mkdocstrings-source">
               <summary>Source code in <code>src/auto_labeler/llm.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-56">56</a></span>
 <span class="normal"><a href="#__codelineno-0-57">57</a></span>
@@ -2374,7 +2376,7 @@ Supports persistent disk caching of responses.</p>
         <p>Asynchronous version of generate.</p>
 
 
-            <details class="quote">
+            <details class="mkdocstrings-source">
               <summary>Source code in <code>src/auto_labeler/llm.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-125">125</a></span>
 <span class="normal"><a href="#__codelineno-0-126">126</a></span>
@@ -2451,7 +2453,7 @@ Supports persistent disk caching of responses.</p>
         <p>Asynchronous version of generate_structured.</p>
 
 
-            <details class="quote">
+            <details class="mkdocstrings-source">
               <summary>Source code in <code>src/auto_labeler/llm.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-195">195</a></span>
 <span class="normal"><a href="#__codelineno-0-196">196</a></span>
@@ -2548,7 +2550,7 @@ Supports persistent disk caching of responses.</p>
         <p>Generates a simple text response from the LLM.</p>
 
 
-            <details class="quote">
+            <details class="mkdocstrings-source">
               <summary>Source code in <code>src/auto_labeler/llm.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-97"> 97</a></span>
 <span class="normal"><a href="#__codelineno-0-98"> 98</a></span>
@@ -2624,7 +2626,7 @@ Supports persistent disk caching of responses.</p>
 Uses JSON mode where available or prompts the model to output JSON.</p>
 
 
-            <details class="quote">
+            <details class="mkdocstrings-source">
               <summary>Source code in <code>src/auto_labeler/llm.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-152">152</a></span>
 <span class="normal"><a href="#__codelineno-0-153">153</a></span>
@@ -2729,7 +2731,7 @@ Uses JSON mode where available or prompts the model to output JSON.</p>
         <p>Generates embeddings for a string or list of strings.</p>
 
 
-            <details class="quote">
+            <details class="mkdocstrings-source">
               <summary>Source code in <code>src/auto_labeler/llm.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-251">251</a></span>
 <span class="normal"><a href="#__codelineno-0-252">252</a></span>
@@ -2808,6 +2810,7 @@ Uses JSON mode where available or prompts the model to output JSON.</p>
     <div class="doc doc-contents first">
 
 
+
         <p>Stays updated with the cumulative token usage and estimated cost for a session.</p>
 
 
@@ -2817,7 +2820,7 @@ Uses JSON mode where available or prompts the model to output JSON.</p>
 
 
 
-              <details class="quote">
+              <details class="mkdocstrings-source">
                 <summary>Source code in <code>src/auto_labeler/llm.py</code></summary>
                 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-14">14</a></span>
 <span class="normal"><a href="#__codelineno-0-15">15</a></span>
@@ -2893,7 +2896,7 @@ Uses JSON mode where available or prompts the model to output JSON.</p>
 
 
 
-  <div class="doc doc-children">
+<div class="doc doc-children">
 
 
 
@@ -2918,7 +2921,7 @@ Uses JSON mode where available or prompts the model to output JSON.</p>
         <p>Updates usage from a LiteLLM response object.</p>
 
 
-            <details class="quote">
+            <details class="mkdocstrings-source">
               <summary>Source code in <code>src/auto_labeler/llm.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-24">24</a></span>
 <span class="normal"><a href="#__codelineno-0-25">25</a></span>
