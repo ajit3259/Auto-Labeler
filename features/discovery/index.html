@@ -523,52 +523,35 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#strategies" class="md-nav__link">
+  <a href="#1-simple-discovery" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Strategies
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Strategies">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#simple-discovery" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Simple Discovery
+        1. Simple Discovery
       
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#iterative-discovery" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#2-iterative-discovery-recommended" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Iterative Discovery
+        2. Iterative Discovery (Recommended)
       
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#embedding-discovery" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#3-embedding-discovery" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Embedding Discovery
+        3. Embedding Discovery
       
     </span>
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -698,52 +681,35 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#strategies" class="md-nav__link">
+  <a href="#1-simple-discovery" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Strategies
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Strategies">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#simple-discovery" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Simple Discovery
+        1. Simple Discovery
       
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#iterative-discovery" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#2-iterative-discovery-recommended" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Iterative Discovery
+        2. Iterative Discovery (Recommended)
       
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#embedding-discovery" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#3-embedding-discovery" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Embedding Discovery
+        3. Embedding Discovery
       
     </span>
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -768,14 +734,40 @@
 
 
 <h1 id="label-discovery">Label Discovery 🔍</h1>
-<p>If you have a large dataset and aren't sure which categories/labels to use, Auto-Labeler can help you "discover" the latent structure of your data.</p>
-<h2 id="strategies">Strategies</h2>
-<h3 id="simple-discovery">Simple Discovery</h3>
-<p>Samples the top <code>N</code> records and asks the LLM to provide a list of categories. Best for initial exploration.</p>
-<h3 id="iterative-discovery">Iterative Discovery</h3>
-<p>A multi-pass strategy that finds initial labels, identifies "Other" records, and then refines the taxonomy to include edge cases.</p>
-<h3 id="embedding-discovery">Embedding Discovery</h3>
-<p>Uses vector embeddings and K-Means clustering to identify common themes across a large dataset (e.g., 500+ records).</p>
+<p>Discovery is the process of identifying a consistent taxonomy from raw, unlabeled text. Auto-Labeler provides three strategies to handle different dataset sizes and complexities.</p>
+<h2 id="1-simple-discovery">1. Simple Discovery</h2>
+<p>Best for small datasets or a quick overview of themes. It samples a batch of records and asks the LLM to provide the top unique categorical labels.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">suggested</span> <span class="o">=</span> <span class="n">labeler</span><span class="o">.</span><span class="n">suggest_labels</span><span class="p">(</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">df</span><span class="p">,</span> 
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">context</span><span class="o">=</span><span class="s2">&quot;Analyzing help desk tickets&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">n_labels</span><span class="o">=</span><span class="mi">5</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="p">)</span>
+</code></pre></div>
+<h2 id="2-iterative-discovery-recommended">2. Iterative Discovery (Recommended)</h2>
+<p>A robust multi-pass strategy. It finds an initial taxonomy, then specifically looks for "Other" or edge-case records to refine the labels until the coverage is complete.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">auto_labeler.strategies</span><span class="w"> </span><span class="kn">import</span> <span class="n">IterativeDiscoveryStrategy</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">strategy</span> <span class="o">=</span> <span class="n">IterativeDiscoveryStrategy</span><span class="p">(</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="n">labeler</span><span class="o">.</span><span class="n">llm</span><span class="p">,</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="n">max_iterations</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="n">sample_size</span><span class="o">=</span><span class="mi">10</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="p">)</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="n">labels</span> <span class="o">=</span> <span class="n">labeler</span><span class="o">.</span><span class="n">suggest_labels</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s2">&quot;Customer Feedback&quot;</span><span class="p">,</span> <span class="n">strategy</span><span class="o">=</span><span class="n">strategy</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="3-embedding-discovery">3. Embedding Discovery</h2>
+<p>Uses vector embeddings and K-Means clustering. This identifies semantic clusters across much larger datasets, ensuring that "discovery" isn't biased by just a few random rows.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">auto_labeler.strategies</span><span class="w"> </span><span class="kn">import</span> <span class="n">EmbeddingDiscoveryStrategy</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">strategy</span> <span class="o">=</span> <span class="n">EmbeddingDiscoveryStrategy</span><span class="p">(</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="n">labeler</span><span class="o">.</span><span class="n">llm</span><span class="p">,</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="n">clustering_method</span><span class="o">=</span><span class="s2">&quot;kmeans&quot;</span><span class="p">,</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="n">n_clusters</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    <span class="n">embedding_model</span><span class="o">=</span><span class="s2">&quot;gemini/gemini-embedding-001&quot;</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="p">)</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="n">labels</span> <span class="o">=</span> <span class="n">labeler</span><span class="o">.</span><span class="n">suggest_labels</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s2">&quot;Log Analysis&quot;</span><span class="p">,</span> <span class="n">strategy</span><span class="o">=</span><span class="n">strategy</span><span class="p">)</span>
+</code></pre></div>
 
 
 
