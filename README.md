@@ -26,6 +26,7 @@ results = labeler.label_dataset(
     labels=["Urgent", "Billing", "General"],
     context="Customer support tickets"
 )
+print(results[["text", "label"]])  # output column is always 'label'
 print(labeler.get_usage())
 ```
 

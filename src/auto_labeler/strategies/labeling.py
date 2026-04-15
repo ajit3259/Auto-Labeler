@@ -35,7 +35,7 @@ class LabelingStrategy(Protocol):
             examples: Optional list of few-shot examples (dictionaries with 'text' and 'label').
             
         Returns:
-            DataFrame with 'predicted_label' column added.
+            DataFrame with 'label' column added.
         """
         ...
 
@@ -115,7 +115,7 @@ class SimpleLabelingStrategy:
                 logger.error(f"Error in simple labeling: {e}")
                 label_results.append(None)
         
-        result_df['predicted_label'] = label_results
+        result_df['label'] = label_results
         return result_df
 
     def _label_batched(
@@ -186,7 +186,7 @@ class SimpleLabelingStrategy:
             except Exception as e:
                 logger.error(f"Error in batched labeling chunk {chunk_idx}: {e}")
                 
-        result_df['predicted_label'] = label_results
+        result_df['label'] = label_results
         return result_df
 
     async def alabel(
@@ -268,7 +268,7 @@ class SimpleLabelingStrategy:
                     pos = df.index.get_loc(rid)
                     label_results[pos] = label
                     
-        result_df['predicted_label'] = label_results
+        result_df['label'] = label_results
         return result_df
 
 class ConsensusLabelingStrategy:
@@ -382,7 +382,7 @@ class ConsensusLabelingStrategy:
                     label_results.append(valid_votes[0])
                     confidence_results.append("Low (Fallback)")
 
-        result_df['predicted_label'] = label_results
+        result_df['label'] = label_results
         result_df['confidence_level'] = confidence_results
         return result_df
 
@@ -427,7 +427,7 @@ class HierarchicalLabelingStrategy:
             multi_label=False, # Hierarchical category is usually single
             examples=examples
         )
-        df_with_cats = df_with_cats.rename(columns={"predicted_label": "predicted_category"})
+        df_with_cats = df_with_cats.rename(columns={"label": "predicted_category"})
         
         # Pass 2: Sub-category Labeling
         logger.info("Pass 2: Identifying Sub-categories...")
@@ -456,11 +456,11 @@ class HierarchicalLabelingStrategy:
                 multi_label=multi_label,
                 examples=None # Examples might need to be specific to sub-category, for now skip
             )
-            sub_results.append(res["predicted_label"].iloc[0])
+            sub_results.append(res["label"].iloc[0])
             
         df_with_cats["predicted_sub_label"] = sub_results
         # Final combined label (optional, but good for compatibility)
-        df_with_cats["predicted_label"] = df_with_cats.apply(
+        df_with_cats["label"] = df_with_cats.apply(
             lambda r: f"{r['predicted_category']} > {r['predicted_sub_label']}" if r['predicted_sub_label'] else r['predicted_category'], 
             axis=1
         )

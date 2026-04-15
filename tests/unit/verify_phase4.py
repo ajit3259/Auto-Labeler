@@ -26,13 +26,13 @@ async def test_batching_and_async():
     strategy_batch = SimpleLabelingStrategy(labeler.llm, batch_size=3)
     res_batch = labeler.label_dataset(df, labels=labels, context=context, strategy=strategy_batch)
     print("Batch Results:")
-    print(res_batch[["text", "predicted_label"]])
+    print(res_batch[["text", "label"]])
     
     # 2. Test Async Labeling
     print("\n⚡ Testing Async Labeling (All at once)...")
     res_async = await strategy_batch.alabel(df, labels=labels, context=context, prompts_dir=labeler.prompts_dir)
     print("Async Results:")
-    print(res_async[["text", "predicted_label"]])
+    print(res_async[["text", "label"]])
     
     # 3. Verify Telemetry
     usage = labeler.get_usage()

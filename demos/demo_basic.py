@@ -58,7 +58,7 @@ def main():
     labeled_df = labeler.label_dataset(df, labels=suggested_labels, context=context)
     
     print("\nResults:")
-    print(labeled_df[["text", "predicted_label"]])
+    print(labeled_df[["text", "label"]])
     
     # 5. Domain Knowledge (Few-Shot) Demo
     print("\n--- Phase 2.5: Domain Knowledge (Few-Shot) ---")
@@ -72,7 +72,7 @@ def main():
     
     # Without examples (might go to General Support)
     res_no_ex = labeler.label_dataset(tricky_df, labels=suggested_labels + ["Account Security"], context=context)
-    print(f"Without Example: {res_no_ex['predicted_label'].iloc[0]}")
+    print(f"Without Example: {res_no_ex['label'].iloc[0]}")
     
     # With Example
     examples = [
@@ -84,7 +84,7 @@ def main():
         context=context,
         examples=examples
     )
-    print(f"With Example: {res_with_ex['predicted_label'].iloc[0]}")
+    print(f"With Example: {res_with_ex['label'].iloc[0]}")
 
     # 5. Consensus Mode Demo
     print("\n--- Phase 3: Consensus & Confidence ---")
@@ -117,7 +117,7 @@ def main():
     )
     
     print("\nConsensus Results:")
-    print(consensus_df[["text", "predicted_label", "confidence_level"]])
+    print(consensus_df[["text", "label", "confidence_level"]])
 
     # 6. Final Usage Check
     print("\n--- Final Session Stats ---")
