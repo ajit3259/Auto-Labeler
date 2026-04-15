@@ -18,12 +18,6 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
 ]
-
-[project.urls]
-Homepage = "https://github.com/ajit3259/Auto-Labeler"
-Repository = "https://github.com/ajit3259/Auto-Labeler"
-Documentation = "https://ajit3259.github.io/Auto-Labeler"
-
 dependencies = [
     "pandas>=2.0.0",
     "litellm>=1.0.0",
@@ -37,6 +31,11 @@ dependencies = [
     "click",
     "diskcache"
 ]
+
+[project.urls]
+Homepage = "https://github.com/ajit3259/Auto-Labeler"
+Repository = "https://github.com/ajit3259/Auto-Labeler"
+Documentation = "https://ajit3259.github.io/Auto-Labeler"
 
 [project.optional-dependencies]
 test = [
