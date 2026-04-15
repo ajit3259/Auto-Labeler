@@ -13,7 +13,7 @@ def main():
 @click.option('--input', '-i', required=True, type=click.Path(exists=True), help='Path to input CSV or Parquet file.')
 @click.option('--context', '-c', required=True, help='Description of the dataset context.')
 @click.option('--n-labels', '-n', default=5, help='Number of labels to suggest.')
-@click.option('--model', '-m', default='gemini/gemini-flash-latest', help='LLM model to use.')
+@click.option('--model', '-m', default='gemini/gemini-2.5-flash', help='LLM model to use.')
 @click.option('--output', '-o', type=click.Path(), help='Path to save discovered labels (YAML).')
 def discover(input, context, n_labels, model, output):
     """Suggest potential labels for a dataset."""
@@ -43,7 +43,7 @@ def discover(input, context, n_labels, model, output):
 @click.option('--input', '-i', required=True, type=click.Path(exists=True), help='Path to input CSV or Parquet file.')
 @click.option('--labels', '-l', required=True, help='Comma-separated list of labels or path to labels YAML.')
 @click.option('--context', '-c', required=True, help='Description of the dataset context.')
-@click.option('--model', '-m', default='gemini/gemini-flash-latest', help='LLM model to use.')
+@click.option('--model', '-m', default='gemini/gemini-2.5-flash', help='LLM model to use.')
 @click.option('--output', '-o', required=True, type=click.Path(), help='Path to save labeled output.')
 @click.option('--batch-size', '-b', default=1, help='Number of records per LLM call.')
 @click.option('--target-column', '-t', default='text', help='Column containing text to label.')

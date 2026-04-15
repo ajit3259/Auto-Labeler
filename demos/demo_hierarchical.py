@@ -13,7 +13,7 @@ def main():
     print("🚀 Initializing Hierarchical Labeling Demo...")
     
     # Use the verified Gemini model for 2026 environment
-    labeler = AutoLabeler(model_name="gemini/gemini-flash-latest")
+    labeler = AutoLabeler(model_name="gemini/gemini-2.5-flash")
 
     # Data with distinct categories and sub-themes
     data = {"text": [

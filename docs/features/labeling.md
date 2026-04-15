@@ -44,7 +44,7 @@ The most robust mode. It calls multiple models (or uses multiple samples) and re
 from auto_labeler.strategies import ConsensusLabelingStrategy
 
 strategy = ConsensusLabelingStrategy(
-    models=["gemini/gemini-flash-latest", "openai/gpt-4o-mini"],
+    models=["gemini/gemini-2.5-flash", "openai/gpt-4o-mini"],
     adjudicator_model="gemini/gemini-1.5-pro"
 )
 

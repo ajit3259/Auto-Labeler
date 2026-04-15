@@ -20,7 +20,7 @@ pip install auto-labeler-ai
 from auto_labeler import AutoLabeler
 import pandas as pd
 
-labeler = AutoLabeler(model_name="gemini/gemini-flash-latest")
+labeler = AutoLabeler(model_name="gemini/gemini-2.5-flash")
 results = labeler.label_dataset(
     pd.read_csv("data.csv"),
     labels=["Urgent", "Billing", "General"],

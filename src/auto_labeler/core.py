@@ -13,7 +13,7 @@ class AutoLabeler:
     """
     def __init__(
         self, 
-        model_name: str = "gemini/gemini-flash-latest", 
+        model_name: str = "gemini/gemini-2.5-flash", 
         api_key: Optional[str] = None,
         use_cache: bool = True,
         cache_dir: str = ".auto_labeler_cache",

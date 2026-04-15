@@ -8,7 +8,7 @@ async def test_batching_and_async():
     load_dotenv()
     print("🚀 Initializing Phase 4 Verification...")
     
-    labeler = AutoLabeler(model_name="gemini/gemini-flash-latest")
+    labeler = AutoLabeler(model_name="gemini/gemini-2.5-flash")
     
     df = pd.DataFrame({"text": [
         "I need help with my billing.",

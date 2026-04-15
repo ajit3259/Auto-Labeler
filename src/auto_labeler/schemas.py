@@ -18,7 +18,7 @@ class DiscoveryConfig(BaseModel):
 
 class AutoLabelerConfig(BaseModel):
     """Global configuration for the AutoLabeler instance."""
-    model_name: str = Field("gemini/gemini-flash-latest")
+    model_name: str = Field("gemini/gemini-2.5-flash")
     api_key: Optional[str] = None
     use_cache: bool = True
     cache_dir: str = ".auto_labeler_cache"
