@@ -1,88 +1,73 @@
 # Getting Started
 
-Getting up and running with Auto-Labeler is simple. Follow this guide to set up your environment and run your first labeling job.
+This guide walks you through the "Zero to Labeled" workflow. We'll take a raw CSV and turn it into a categorized dataset with cost telemetry.
 
-## 1. Installation
+## 1. Environment Setup
 
-Auto-Labeler requires Python 3.9 or higher.
+Auto-Labeler is a lightweight wrapper around LiteLLM and Pandas. Ensure you have an API key for your preferred provider (Gemini is the default).
 
 ```bash
-pip install auto-labeler
+pip install auto-labeler-ai
+export GEMINI_API_KEY="your-key-here"
 ```
 
-## 2. Setting up API Keys
+## 2. The Core Workflow: From Zero to Labeled
 
-Auto-Labeler uses **LiteLLM** under the hood, supporting 100+ LLM providers. You'll need an API key for the model you want to use.
+In a real project, you usually start with text and no taxonomy. Auto-Labeler handles the transition from discovery to classification in one object.
 
-Create a `.env` file in your project root or set the environment variables in your shell:
-
-### Google Gemini (Recommended)
-```bash
-export GEMINI_API_KEY="your-api-key-here"
-```
-
-### OpenAI
-```bash
-export OPENAI_API_KEY="your-api-key-here"
-```
-
-## 3. Your First Labeling Job
-
-Create a file named `label_data.py`:
+### The "All-in-One" Script
 
 ```python
 import pandas as pd
 from auto_labeler import AutoLabeler
-from dotenv import load_dotenv
 
-load_dotenv()
+# 1. Load noisy, unlabeled data
+df = pd.read_csv("support_tickets.csv")
 
-# Sample data
-data = {
-    "text": [
-        "How do I reset my password?",
-        "I was charged twice for my subscription.",
-        "Can I add a second user to my plan?",
-    ]
-}
-df = pd.DataFrame(data)
+# 2. Initialize (Default model is gemini-flash for cost-efficiency)
+labeler = AutoLabeler()
 
-# Initialize
-labeler = AutoLabeler(model_name="gemini/gemini-flash-latest")
-
-# Run Labeling
-results = labeler.label_dataset(
-    df,
-    labels=["Account Access", "Billing", "Feature Request"],
-    context="SaaS Platform customer support",
-    batch_size=2 # Fast & efficient!
-)
-
-print(results[["text", "predicted_label"]])
-print(f"Cost: ${labeler.get_usage()['total_cost_usd']}")
-```
-
-## 4. Discovering Labels
-
-If you don't know your categories yet, use `suggest_labels`:
-
-```python
+# 3. Discovery: Let the AI find the themes
+# This samples the data and suggests the top N labels
 suggested = labeler.suggest_labels(
-    df,
-    context="Analyzing user feedback for a mobile game",
+    df, 
+    context="Analyzing help desk tickets for a fintech company",
     n_labels=5
 )
-print(f"Suggested Categories: {suggested}")
+print(f"Top themes found: {suggested}")
+
+# 4. Labeling: Apply those themes with production caching
+# Batching is handled automatically to reduce Latency/Cost
+results = labeler.label_dataset(
+    df,
+    labels=suggested,
+    context="Categorizing tickets for routing to specialist teams",
+    batch_size=10 
+)
+
+# 5. Review Usage
+usage = labeler.get_usage()
+print(f"Billed Tokens: {usage['total_tokens']}")
+print(f"Estimated Cost: ${usage['total_cost_usd']:.4f}")
+
+# 6. Save results
+results.to_csv("labeled_tickets.csv", index=False)
 ```
 
-## 5. Using the CLI
+## 3. Production Configuration
 
-Auto-Labeler also comes with a convenient CLI tool:
+For real-world use, you may want to customize how the library behaves:
 
-```bash
-# Discover labels
-auto-labeler discover -i feedback.csv -c "Exploring new labels" -n 5
-
-# Apply labels with batching
-auto-labeler label -i feedback.csv -l "Bug,Feature,UI" -c "Game Feedback" -o results.csv --batch-size 10
+```python
+labeler = AutoLabeler(
+    model_name="openai/gpt-4o-mini", # Switch providers easily
+    use_cache=True,                  # Enable/Disable disk caching
+    cache_dir=".my_cache",           # Custom cache location
+    log_level="DEBUG"                # See raw prompts and cache hits
+)
 ```
+
+## 4. Next Steps
+- **[Labeling Strategies](features/labeling.md)**: Move beyond simple labeling to Hierarchical or Consensus modes.
+- **[Discovery Strategies](features/discovery.md)**: Use Embeddings for deep semantic discovery.
+- **[Caching & Telemetry](features/telemetry.md)**: Understand how to manage your data and costs.

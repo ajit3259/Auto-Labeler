@@ -1,50 +1,56 @@
-# Welcome to Auto-Labeler 🏷️
+# Auto-Labeler 🏷️
 
-**Auto-Labeler** is a pragmatic, AI-powered Python library designed to label unlabeled datasets with minimal effort and maximum reliability. 
+**Unlabeled data to insights in two steps.**
 
-Whether you have thousands of customer support tickets, product reviews, or medical records, Auto-Labeler helps you go from raw text to structured categories in minutes using state-of-the-art LLMs (Gemini, OpenAI, Anthropic, etc.).
+Auto-Labeler is a pragmatic AI tool for developers who need to categorize text data at scale without manually labeling thousands of rows. It uses state-of-the-art LLMs (Gemini, OpenAI, Anthropic) to **discover** your taxonomy and then **assign** labels with production-grade reliability.
 
-## Key Features
+## Why Auto-Labeler?
 
-*   **🔍 Automatic Discovery**: Don't know your labels yet? Auto-Labeler can analyze your data and suggest a taxonomy for you.
-*   **⚡ High Performance**: Built-in batching and asynchronous support for high-throughput labeling.
-*   **💾 Smart Caching**: Save costs and time with local disk caching of LLM responses.
-*   **📊 Transparency**: Built-in telemetry tracks every token and estimated USD cost.
-*   **🛡️ Robustness**: Pydantic-powered validation and retry logic ensure reliable operation.
+*   **🔍 No Labels? No Problem**: Automatically discovers the latent structure of your data and suggests a taxonomy.
+*   **⚡ Built for Scale**: Asynchronous batching means you can process thousands of records efficiently.
+*   **💾 Zero-Cost Re-runs**: Persistent disk caching ensures you never pay for the same completion twice.
+*   **💰 Transparent Costs**: Real-time USD telemetry for every session.
+*   **🛡️ Production-Ready**: Strict Pydantic validation and retry logic built-in.
 
-## Quick Start
+## The Pragmatic Workflow
+
+Most labeling tasks follow a simple pattern: Discover -> Label.
 
 ```python
 from auto_labeler import AutoLabeler
 import pandas as pd
 
-# 1. Load your data
-df = pd.read_csv("data.csv")
+# 1. Initialize (Defaults to Gemini Flash - Fast & Cheap)
+labeler = AutoLabeler()
 
-# 2. Initialize the labeler
-labeler = AutoLabeler(model_name="gemini/gemini-flash-latest")
+# 2. Discover: "I don't know what my categories are"
+df = pd.read_csv("unlabeled_feedback.csv")
+suggested_labels = labeler.suggest_labels(
+    df, 
+    context="Analyzing customer feedback for a mobile app"
+)
+print(f"Top discovered categories: {suggested_labels}")
 
-# 3. Label your dataset
-labeled_df = labeler.label_dataset(
+# 3. Label: "Now apply those categories to everything"
+results_df = labeler.label_dataset(
     df,
-    labels=["Urgent", "General Query", "Billing"],
-    context="Customer support tickets for a fintech app",
-    batch_size=5
+    labels=suggested_labels,
+    context="Customer Support Ticketing"
 )
 
-# 4. Check results and usage
-print(labeled_df.head())
-print(labeler.get_usage())
+# 4. Check efficiency
+print(labeler.get_usage()) 
+# -> {'total_tokens': 1540, 'total_cost_usd': 0.0004, ...}
 ```
 
 ## Installation
 
 ```bash
-pip install auto-labeler
+pip install auto-labeler-ai
 ```
 
 ---
 
 <div align="center">
-  <p>Built with ❤️ for pragmatic AI developers.</p>
+  <p>Stop labeling. Start analyzing.</p>
 </div>
