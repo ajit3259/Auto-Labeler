@@ -1,5 +1,5 @@
 [project]
-name = "auto-labeler"
+name = "auto-labeler-ai"
 version = "0.1.0"
 description = "A pragmatic AI-powered data labeling library."
 readme = "README.md"

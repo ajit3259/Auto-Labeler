@@ -12,7 +12,7 @@ An AI-powered data labeling library for Python.
 
 ## Installation
 ```bash
-pip install auto-labeler
+pip install auto-labeler-ai
 ```
 
 ## Quick Start
