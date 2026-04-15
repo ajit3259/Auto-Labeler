@@ -333,11 +333,20 @@ class ConsensusLabelingStrategy:
         output_format_instruction = 'a string' if not multi_label else 'a list of strings'
         
         from jinja2 import Template
+        from ..utils import resolve_label
         template = Template(assignment_template)
+
+        vote_schema = {
+            "type": "object",
+            "properties": {
+                "label": {"type": "string" if not multi_label else "array"}
+            },
+            "required": ["label"]
+        }
 
         for index, row in result_df.iterrows():
             record_content = row[target_column] if target_column in row else str(row.to_dict())
-            
+
             # 1. BroadCast Query
             prompt = template.render(
                 context=context,
@@ -347,46 +356,55 @@ class ConsensusLabelingStrategy:
                 output_format_instruction=output_format_instruction,
                 examples=examples
             )
-            
+
             votes = []
             for adapter in self.adapters:
                 try:
-                    response = adapter.generate_structured(prompt, response_schema={})
+                    response = adapter.generate_structured(prompt, response_schema=vote_schema)
                     val = response.get("label")
                     if not multi_label and isinstance(val, list):
                         val = val[0] if val else None
+                    if not multi_label:
+                        resolved = resolve_label(val, labels)
+                        if resolved is None and val is not None:
+                            logger.warning(f"Consensus vote returned label '{val}' not in allowed list — treating as None")
+                        val = resolved
                     votes.append(val)
                 except Exception as e:
                     logger.error(f"Error in consensus vote: {e}")
                     votes.append(None)
-            
+
             # 2. Check Consensus
             valid_votes = [v for v in votes if v is not None]
-            
+
             if not valid_votes:
                 label_results.append(None)
                 confidence_results.append("Failed")
                 continue
 
             is_unanimous = all(v == valid_votes[0] for v in valid_votes)
-            
+
             if is_unanimous:
                 label_results.append(valid_votes[0])
                 confidence_results.append("High (Unanimous)")
             else:
                 # 3. Adjudicate
                 vote_str = "\n".join([f"Model {i+1}: {v}" for i, v in enumerate(votes)])
-                # Adjudicator prompt doesn't need examples usually, but could benefit. 
-                # For now keep simple format/replace for adjudicator as we didn't update that yaml.
-                adj_prompt = adjudicator_template.format(
+                adj_template = Template(adjudicator_template)
+                adj_prompt = adj_template.render(
                     context=context,
                     labels=labels,
                     record_content=record_content,
                     votes=vote_str
                 )
                 try:
-                    adj_response = self.adjudicator.generate_structured(adj_prompt, response_schema={})
+                    adj_response = self.adjudicator.generate_structured(adj_prompt, response_schema=vote_schema)
                     final_label = adj_response.get("label")
+                    if not multi_label:
+                        resolved = resolve_label(final_label, labels)
+                        if resolved is None and final_label is not None:
+                            logger.warning(f"Adjudicator returned label '{final_label}' not in allowed list — using fallback")
+                        final_label = resolved
                     label_results.append(final_label)
                     confidence_results.append("Medium (Adjudicated)")
                 except Exception:

@@ -27,16 +27,16 @@ class TestAutoLabeler(unittest.TestCase):
         
         result_df = self.labeler.label_dataset(df, labels=["Positive", "Negative"], context="test", multi_label=False)
         
-        self.assertIn("predicted_label", result_df.columns)
-        self.assertEqual(result_df.iloc[0]["predicted_label"], "Positive")
+        self.assertIn("label", result_df.columns)
+        self.assertEqual(result_df.iloc[0]["label"], "Positive")
 
     def test_label_dataset_multi_label(self):
         df = pd.DataFrame({"text": ["content 1"]})
         self.labeler.llm.generate_structured.return_value = {"label": ["Tech", "Sales"]}
-        
+
         result_df = self.labeler.label_dataset(df, labels=["Tech", "Sales"], context="test", multi_label=True)
-        
-        self.assertEqual(result_df.iloc[0]["predicted_label"], ["Tech", "Sales"])
+
+        self.assertEqual(result_df.iloc[0]["label"], ["Tech", "Sales"])
 
 if __name__ == '__main__':
     unittest.main()

@@ -1,4 +1,4 @@
-from typing import List, Protocol, Literal
+from typing import List, Optional, Protocol, Literal
 import pandas as pd
 import numpy as np
 from ..llm import LLMAdapter
@@ -24,7 +24,7 @@ class EmbeddingDiscoveryStrategy:
         eps: float = 0.5,
         min_samples: int = 5,
         sample_size: int = 100,
-        embedding_model: str = "text-embedding-3-small",
+        embedding_model: Optional[str] = None,
         text_column: str = "text"
     ):
         self.llm = llm
@@ -33,6 +33,7 @@ class EmbeddingDiscoveryStrategy:
         self.eps = eps
         self.min_samples = min_samples
         self.sample_size = sample_size
+        # None → get_embedding will auto-derive from the LLM's provider
         self.embedding_model = embedding_model
         self.text_column = text_column
 

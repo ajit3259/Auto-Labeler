@@ -248,10 +248,29 @@ class LLMAdapter:
         except json.JSONDecodeError:
             raise ValueError(f"Failed to parse LLM response as JSON: {clean_content}")
     
-    def get_embedding(self, text: Union[str, List[str]], model: str = "text-embedding-3-small") -> Union[List[float], List[List[float]]]:
+    def _default_embedding_model(self) -> str:
+        """Derives a sensible embedding model from the adapter's LLM model name."""
+        name = self.model_name.lower()
+        if name.startswith("gemini/") or name.startswith("google/"):
+            return "gemini/text-embedding-004"
+        if name.startswith("anthropic/") or name.startswith("claude"):
+            # Anthropic has no native embedding API; fall back to OpenAI default
+            return "text-embedding-3-small"
+        # OpenAI and everything else
+        return "text-embedding-3-small"
+
+    def get_embedding(self, text: Union[str, List[str]], model: Optional[str] = None) -> Union[List[float], List[List[float]]]:
         """
         Generates embeddings for a string or list of strings.
+
+        Args:
+            text: String or list of strings to embed.
+            model: Embedding model to use. Defaults to a provider-appropriate model
+                   derived from the adapter's LLM (e.g. ``gemini/text-embedding-004``
+                   for Gemini users, ``text-embedding-3-small`` for OpenAI users).
         """
+        if model is None:
+            model = self._default_embedding_model()
         cache_key = self._get_cache_key(str(text), model=model, type="split_embedding")
         if self.cache and cache_key in self.cache:
             return self.cache[cache_key]

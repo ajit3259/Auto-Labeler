@@ -50,10 +50,11 @@ class TestEmbeddingStrategy(unittest.TestCase):
         )
         self.strategy._load_prompt = MagicMock(return_value="Prompt")
         
-        # Same embeddings
+        # Embeddings in two distinct directions so they remain separate after L2 normalisation.
+        # Group A points along +x, Group B points along +y.
         embeddings = [
-            [0, 0], [0.1, 0.1], 
-            [10, 10], [10.1, 10.1]
+            [1.0, 0.0], [0.95, 0.05],
+            [0.0, 1.0], [0.05, 0.95],
         ]
         self.llm_mock.get_embedding.return_value = embeddings
         self.llm_mock.generate_structured.side_effect = [{"label": "L1"}, {"label": "L2"}]

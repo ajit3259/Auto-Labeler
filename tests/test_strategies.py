@@ -72,7 +72,7 @@ class TestStrategies(unittest.TestCase):
             df = pd.DataFrame({"text": ["foo"]})
             result = strategy.label(df, ["A", "B"], "ctx", pathlib.Path("."))
             
-            self.assertEqual(result.iloc[0]["predicted_label"], "A")
+            self.assertEqual(result.iloc[0]["label"], "A")
             self.assertEqual(result.iloc[0]["confidence_level"], "High (Unanimous)")
 
     def test_consensus_strategy_conflict(self):
@@ -100,7 +100,7 @@ class TestStrategies(unittest.TestCase):
             df = pd.DataFrame({"text": ["foo"]})
             result = strategy.label(df, ["A", "B"], "ctx", pathlib.Path("."))
             
-            self.assertEqual(result.iloc[0]["predicted_label"], "A")
+            self.assertEqual(result.iloc[0]["label"], "A")
             self.assertEqual(result.iloc[0]["confidence_level"], "Medium (Adjudicated)")
 
     def test_simple_strategy_shuffle(self):
@@ -182,8 +182,8 @@ class TestStrategies(unittest.TestCase):
             batch_size=2
         )
         
-        # Mock _load_prompt
-        strategy._load_prompt = MagicMock(return_value="Prompt with {current_labels}")
+        # Mock _load_prompt — must use Jinja2 syntax since the implementation uses Template.render()
+        strategy._load_prompt = MagicMock(return_value="Prompt with {{ current_labels }}")
         
         # Batch 1: Start empty, find ["L1"]
         # Batch 2: Start with ["L1"], find ["L2"]
