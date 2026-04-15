@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+         <loc>https://ajit3259.github.io/Auto-Labeler/</loc>
+         <lastmod>2026-04-15</lastmod>
+    </url>
+    <url>
+         <loc>https://ajit3259.github.io/Auto-Labeler/api/</loc>
+         <lastmod>2026-04-15</lastmod>
+    </url>
+    <url>
+         <loc>https://ajit3259.github.io/Auto-Labeler/getting-started/</loc>
+         <lastmod>2026-04-15</lastmod>
+    </url>
+    <url>
+         <loc>https://ajit3259.github.io/Auto-Labeler/features/discovery/</loc>
+         <lastmod>2026-04-15</lastmod>
+    </url>
+    <url>
+         <loc>https://ajit3259.github.io/Auto-Labeler/features/labeling/</loc>
+         <lastmod>2026-04-15</lastmod>
+    </url>
+    <url>
+         <loc>https://ajit3259.github.io/Auto-Labeler/features/telemetry/</loc>
+         <lastmod>2026-04-15</lastmod>
+    </url>
+</urlset>
